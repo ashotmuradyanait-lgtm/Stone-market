@@ -20,6 +20,7 @@ function Header() {
                 <img className="h-[16px] w-[16px]" src="https://www.stonemarket.am/icons/hy.svg" alt="" />
             </div>
         </div>
+    <div className="flex gap-20">
         <div className="bg-yellow-50 h-[550px] w-[350px] rounded-lg"> 
             <div className="flex p-2">
                 <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Fnatural-stones.png&w=128&q=75" alt="" />
@@ -54,7 +55,10 @@ function Header() {
                 <p className="p-2 font-semibold">Mane Tiles</p>
             </div>
         </div>
-        <div></div>
+        <div>
+             <video className="w-[900px] h-[550px] rounded-lg shadow-lg" src="blob:https://www.stonemarket.am/25229997-e22e-4d64-85cc-8b5a93084c7b" controls muted autoPlay loop/>
+        </div>
+    </div>
     </>
   );
 }   
