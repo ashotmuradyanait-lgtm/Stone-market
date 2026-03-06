@@ -2,14 +2,14 @@ import React from "react";
 
 function Header() {
   return (
-        <div className= "flex gap-2">
+        <div className= "flex gap-80 p-4">
             <img src="https://www.stonemarket.am/icons/logo-primary.svg" alt="" />
-            <div>
-                <p className="justify-between">Գլխավոր</p>
-                <p>Խանութ</p>
-                <p>Դիզայներներ</p>
-                <p>Մեր մասին</p>
-                <p>Կապ</p>
+            <div className="justify-between flex gap-8">
+                <p className="font-GHEAGrpalatReg font-bold">Գլխավոր</p>
+                <p className="font-GHEAGrpalatReg font-bold">Խանութ</p>
+                <p className="font-GHEAGrpalatReg font-bold">Դիզայներներ</p>
+                <p className="font-GHEAGrpalatReg font-bold">Մեր մասին</p>
+                <p className="font-GHEAGrpalatReg font-bold">Կապ</p>
             </div>
         </div>
   );
