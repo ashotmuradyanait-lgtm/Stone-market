@@ -21,15 +21,40 @@ function Header() {
             </div>
         </div>
         <div className="bg-yellow-50 h-[550px] w-[350px] rounded-lg"> 
-            <div className="flex p-4">
+            <div className="flex p-2">
                 <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Fnatural-stones.png&w=128&q=75" alt="" />
                 <p className="p-2 font-semibold">Բնական քար</p>
             </div>
-            <div className="flex p-4">
-                <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Fnatural-stones.png&w=128&q=75" alt="" />
-                <p className="p-2 font-semibold">Բնական քար</p>
+            <div className="flex p-2">
+                <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Ftiles-and-slabs.png&w=128&q=75" alt="" />
+                <p className="p-2 font-semibold">Արհեստական քար</p>
+            </div>
+             <div className="flex p-2">
+                <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Findoor-products.png&w=128&q=75" alt="" />
+                <p className="p-2 font-semibold">Հաստոցներ</p>
+            </div>
+            <div className="flex p-2">
+                <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Fsinks-washbasins.png&w=128&q=75" alt="" />
+                <p className="p-2 font-semibold">Քարամշակման գործիքներ և <br />
+                պարագաներ
+                </p>
+            </div>
+            <div className="flex p-2">
+                <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Fdecorative-items.png&w=128&q=75" alt="" />
+                <p className="p-2 font-semibold">Քիմիական նյութեր</p>
+            </div>
+            <div className="flex p-2">
+                <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Fcustom-products.png&w=128&q=75" alt="" />
+                <p className="p-2 font-semibold">Արտադրական <br />
+                ծառայություններ
+                </p>
+            </div>
+            <div className="flex p-2">
+                <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Fmane-tiles-logo.png&w=128&q=75" alt="" />
+                <p className="p-2 font-semibold">Mane Tiles</p>
             </div>
         </div>
+        <div></div>
     </>
   );
 }   
