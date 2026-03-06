@@ -21,7 +21,14 @@ function Header() {
             </div>
         </div>
         <div className="bg-yellow-50 h-[550px] w-[350px] rounded-lg"> 
-                <img src="/_next/image?url=%2Fimages%2Fnatural-stones.png&w=128&q=75" alt="" />
+            <div className="flex p-4">
+                <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Fnatural-stones.png&w=128&q=75" alt="" />
+                <p className="p-2 font-semibold">Բնական քար</p>
+            </div>
+            <div className="flex p-4">
+                <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Fnatural-stones.png&w=128&q=75" alt="" />
+                <p className="p-2 font-semibold">Բնական քար</p>
+            </div>
         </div>
     </>
   );
