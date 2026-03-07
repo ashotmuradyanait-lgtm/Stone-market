@@ -1,9 +1,66 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 
 function Home() {
   return (
     <>
+    <div className="flex flex-col lg:flex-row gap-6 lg:gap-20 p-4">
+
+  <div className="bg-yellow-50 w-full lg:w-[350px] rounded-lg p-2">
+
+    <div className="flex p-2 items-center">
+      <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Fnatural-stones.png&w=128&q=75" alt="" />
+      <p className="p-2 font-semibold">Բնական քար</p>
+    </div>
+
+    <div className="flex p-2 items-center">
+      <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Ftiles-and-slabs.png&w=128&q=75" alt="" />
+      <p className="p-2 font-semibold">Արհեստական քար</p>
+    </div>
+
+    <div className="flex p-2 items-center">
+      <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Findoor-products.png&w=128&q=75" alt="" />
+      <p className="p-2 font-semibold">Հաստոցներ</p>
+    </div>
+
+    <div className="flex p-2 items-center">
+      <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Fsinks-washbasins.png&w=128&q=75" alt="" />
+      <p className="p-2 font-semibold">
+        Քարամշակման գործիքներ և <br/> պարագաներ
+      </p>
+    </div>
+
+    <div className="flex p-2 items-center">
+      <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Fdecorative-items.png&w=128&q=75" alt="" />
+      <p className="p-2 font-semibold">Քիմիական նյութեր</p>
+    </div>
+
+    <div className="flex p-2 items-center">
+      <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Fcustom-products.png&w=128&q=75" alt="" />
+      <p className="p-2 font-semibold">
+        Արտադրական <br/> ծառայություններ
+      </p>
+    </div>
+
+    <div className="flex p-2 items-center">
+      <img className="h-[54px] w-[54px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Fmane-tiles-logo.png&w=128&q=75" alt="" />
+      <p className="p-2 font-semibold">Mane Tiles</p>
+    </div>
+
+  </div>
+
+
+  <div className="w-full">
+    <video 
+      className="w-full lg:w-[900px] h-[300px] lg:h-[550px] rounded-lg shadow-lg"
+      controls
+      muted
+      autoPlay
+      loop
+    />
+  </div>
+
+</div>
  <div className="p-6 lg:p-20">
   <img 
     className="w-full"
@@ -165,7 +222,9 @@ function Home() {
     <p className="text-sm">Ջի–Էմ–Ջի Ինթիրիորս ստուդիան <br /> հիմնադրվել է 2018 թվականին...</p>
   </div>
 </div>
-<div></div>
+<div className="justify-center flex p-20">
+    <Link to="/dizayner" className="text-white bg-green-300 h-[40px] w-[100px] text-center rounded-lg mx-auto hover:bg-green-400 ">Ավելին</Link>
+</div>
     </>
   );
 }
