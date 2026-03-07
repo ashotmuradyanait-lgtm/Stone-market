@@ -20,9 +20,43 @@ function Footer(){
         </div>
             </div>
              <img className="h-[400px] w-[900px] rounded-lg" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Ffeedback.webp&w=1920&q=75" alt="" />
-            </div>
-            <p className="p-4 border-white border w-[1520px]"></p>
-            <img src="https://www.stonemarket.am/icons/logo-light.svg" alt="" />
+        </div>
+        <p className="p-4 border-white border w-[1520px]"></p>
+        <div className="flex gap-20 p-6">
+        <div>
+            <img className="p-4" src="https://www.stonemarket.am/icons/logo-light.svg" alt="" />
+            <p className="text-white">+374 (33) 76 - 73 - 77</p>
+            <h6 className="text-white text-sm">sstonemarket@yandex.ru</h6>
+        </div>
+        <div>
+            <p className="text-sm text-white">Գլխավոր</p>
+            <p className="text-sm text-white">Խանութ</p>
+            <p className="text-sm text-white">Դիզայներներ</p>
+            <p className="text-sm text-white">Մեր մասին</p>
+            <p className="text-sm text-white">Կապ</p>
+            <p className="text-sm text-white">Գաղտնիության քաղաքականություն</p>
+            <p className="text-sm text-white">Ընդհանուր դրույթներ և պայմաններ</p>
+            <p className="text-sm text-white">Հաշվի ջնջում</p>
+        </div>
+        <div>
+            <p className="text-sm text-white">Ծառայություններ</p>
+            <p className="text-sm text-white">Արտադրական ցիկլի աուդիտ</p>
+            <p className="text-sm text-white">Հանքաքարի շահագործման ծառայություն</p>
+            <p className="text-sm text-white">Ֆոտո/վիդեո բռենդ փաթեթավորում</p>
+            <p className="text-sm text-white">Export-ի կազմակերպում</p>
+            <p className="text-sm text-white">Բեռնափոխադրում</p>
+        </div>
+          <div>
+            <p className="text-sm text-white">Հետևե՜ք մեզ սոցցանցերում</p>
+            <i className="text-sm" class="fa fa-instagram" aria-hidden="true">stonemarket.am</i>
+            <i className="rounded-full" class="fa fa-facebook-official" aria-hidden="true">Stone Market</i>
+        </div>
+        </div>
+        <div className="flex justify-center">
+        <p className="p-10 text-white text-sm text-center">Ներբեռնեք մեր հավելվածը</p>
+        <img src="https://www.stonemarket.am/icons/app-store.svg" alt="" />
+        <img src="https://www.stonemarket.am/icons/google-play.svg" alt="" />
+        </div>
         </div>
         </>
     );
