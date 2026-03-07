@@ -3,7 +3,10 @@ import React from "react";
 function Dizaynerner(){
     return(
         <>
-        <h1></h1>
+        <div className="text-center text-green">
+            <h1>Դիզայներներ</h1>
+        </div>
+        <p></p>
         </>
     );
 }
