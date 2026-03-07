@@ -82,7 +82,33 @@ function Home() {
 <div>
     <h1 className="text-center p-4 text-3xl font-semibold">Դիզայներներ</h1>
 </div>
-<div></div>
+<div className="p-4 justify-center flex gap-10">
+    <div>
+        <img className="h-[180px] w-[250px] rounded-lg" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F1740466806085--Messenger_creation_4D4BF230-75CC-4580-A6C6-5B77D4AED49E.webp&w=1920&q=75" alt="" />
+        <p className="font-semibold">Unique Design</p>
+    <p> Ճարտարապետական ​​3D մոդելների <br /> 
+    մշակում ըստ ձեր գծագրերի և էսքիզների...  </p>
+    </div>
+     <div>
+        <img className="h-[180px] w-[250px] rounded-lg" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F1739358817839--WhatsApp_Image_2025-02-12_at_15.01.36_b320a8a6.webp&w=1920&q=75" alt="" />
+        <p className="font-semibold">ARCHITECTUM LLC</p>
+    <p> 1. Էսքիզային նախագծերի մշակում, <br />
+     ցուցադրական նյութերի պատրաստում...  </p>
+    </div>
+     <div>
+        <img className="h-[180px] w-[250px] rounded-lg" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F1739528262438--WhatsApp_Image_2025-02-14_at_13.51.57_73d0dfcd.webp&w=1920&q=75" alt="" />
+        <p className="font-semibold">LUMINAR studio</p>
+    <p>  Նախագծման ընթացքում մեր փորձառու <br />
+     մասնագետները կիրառում են միմիայն... </p>
+    </div>
+     <div>
+        <img className="h-[180px] w-[250px] rounded-lg" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F1743664023548--photo_2025-04-03_11-05-29.webp&w=1920&q=75" alt="" />
+        <p className="font-semibold">SILAS DESIGN AND CONSTRUCTION</p>
+    <p>  SILAS DESIGN AND CONSTRUCTION <br />
+     հիմնադրվել է 2010 թվականին: Այն  </p>
+    </div>
+</div>
+
     </>
   );
 }
