@@ -80,35 +80,92 @@ function Home() {
   </div>
 </div>
 <div>
-    <h1 className="text-center p-4 text-3xl font-semibold">Դիզայներներ</h1>
-</div>
-<div className="p-4 justify-center flex gap-10">
-    <div>
-        <img className="h-[180px] w-[250px] rounded-lg" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F1740466806085--Messenger_creation_4D4BF230-75CC-4580-A6C6-5B77D4AED49E.webp&w=1920&q=75" alt="" />
-        <p className="font-semibold">Unique Design</p>
-    <p> Ճարտարապետական ​​3D մոդելների <br /> 
-    մշակում ըստ ձեր գծագրերի և էսքիզների...  </p>
-    </div>
-     <div>
-        <img className="h-[180px] w-[250px] rounded-lg" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F1739358817839--WhatsApp_Image_2025-02-12_at_15.01.36_b320a8a6.webp&w=1920&q=75" alt="" />
-        <p className="font-semibold">ARCHITECTUM LLC</p>
-    <p> 1. Էսքիզային նախագծերի մշակում, <br />
-     ցուցադրական նյութերի պատրաստում...  </p>
-    </div>
-     <div>
-        <img className="h-[180px] w-[250px] rounded-lg" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F1739528262438--WhatsApp_Image_2025-02-14_at_13.51.57_73d0dfcd.webp&w=1920&q=75" alt="" />
-        <p className="font-semibold">LUMINAR studio</p>
-    <p>  Նախագծման ընթացքում մեր փորձառու <br />
-     մասնագետները կիրառում են միմիայն... </p>
-    </div>
-     <div>
-        <img className="h-[180px] w-[250px] rounded-lg" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F1743664023548--photo_2025-04-03_11-05-29.webp&w=1920&q=75" alt="" />
-        <p className="font-semibold">SILAS DESIGN AND CONSTRUCTION</p>
-    <p>  SILAS DESIGN AND CONSTRUCTION <br />
-     հիմնադրվել է 2010 թվականին: Այն  </p>
-    </div>
+  <h1 className="text-center p-4 text-3xl font-semibold">Դիզայներներ</h1>
 </div>
 
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+  <div className="text-center">
+    <img
+      className="h-[180px] w-[250px] rounded-lg mx-auto"
+      src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F1740466806085--Messenger_creation_4D4BF230-75CC-4580-A6C6-5B77D4AED49E.webp&w=1920&q=75"
+      alt=""
+    />
+    <p className="font-semibold mt-2">Unique Design</p>
+    <p className="text-sm">Ճարտարապետական ​​3D մոդելների <br /> մշակում ըստ ձեր գծագրերի և էսքիզների...</p>
+  </div>
+
+  <div className="text-center">
+    <img
+      className="h-[180px] w-[250px] rounded-lg mx-auto"
+      src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F1739358817839--WhatsApp_Image_2025-02-12_at_15.01.36_b320a8a6.webp&w=1920&q=75"
+      alt=""
+    />
+    <p className="font-semibold mt-2">ARCHITECTUM LLC</p>
+    <p className="text-sm">1. Էսքիզային նախագծերի մշակում, <br /> ցուցադրական նյութերի պատրաստում...</p>
+  </div>
+
+  <div className="text-center">
+    <img
+      className="h-[180px] w-[250px] rounded-lg mx-auto"
+      src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F1739528262438--WhatsApp_Image_2025-02-14_at_13.51.57_73d0dfcd.webp&w=1920&q=75"
+      alt=""
+    />
+    <p className="font-semibold mt-2">LUMINAR studio</p>
+    <p className="text-sm">Նախագծման ընթացքում մեր փորձառու <br /> մասնագետները կիրառում են միմիայն...</p>
+  </div>
+
+  <div className="text-center">
+    <img
+      className="h-[180px] w-[250px] rounded-lg mx-auto"
+      src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F1743664023548--photo_2025-04-03_11-05-29.webp&w=1920&q=75"
+      alt=""
+    />
+    <p className="font-semibold mt-2">SILAS DESIGN AND CONSTRUCTION</p>
+    <p className="text-sm">SILAS DESIGN AND CONSTRUCTION <br /> հիմնադրվել է 2010 թվականին...</p>
+  </div>
+
+  {/* Երկրորդ շարքը */}
+  <div className="text-center">
+    <img
+      className="h-[180px] w-[250px] rounded-lg mx-auto"
+      src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F1739859337970--Logo_IMAGEMAN.webp&w=1920&q=75"
+      alt=""
+    />
+    <p className="font-semibold mt-2">ԻՄԵՅՋՄԵՆ Ինտերիեր-դիզայնի և...</p>
+    <p className="text-sm">ԻՄԵՅՋՄԵՆ արվեստանոցը հիմնադրվել է <br /> 1999 թվականին...</p>
+  </div>
+
+  <div className="text-center">
+    <img
+      className="h-[180px] w-[250px] rounded-lg mx-auto"
+      src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F1739874444574--WhatsApp_Image_2025-02-18_at_14.15.03_101ceb94.webp&w=1920&q=75"
+      alt=""
+    />
+    <p className="font-semibold mt-2">ԴԱԱՊ Ճարտարապետական․․․</p>
+    <p className="text-sm">ԴԱԱՊ ճարտարապետական արվեստանոցը <br /> նախկին «QC Architects»-ի համահիմնադիր...</p>
+  </div>
+
+  <div className="text-center">
+    <img
+      className="h-[180px] w-[250px] rounded-lg mx-auto"
+      src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F1740464484847--IMG_20250225_101526_731.webp&w=1920&q=75"
+      alt=""
+    />
+    <p className="font-semibold mt-2">ՆԵՐԳԱՂԹ ՃԱՐՏԱՐԱՊԵՏԱԿԱՆ</p>
+    <p className="text-sm">Ներգաղթ ճարտարապետական <br /> արվեստանոցը հիմնադրվել է 2006թ․-ին...</p>
+  </div>
+
+  <div className="text-center">
+    <img
+      className="h-[180px] w-[250px] rounded-lg mx-auto"
+      src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F1741863888966--Logo_16x10.webp&w=1920&q=75"
+      alt=""
+    />
+    <p className="font-semibold mt-2">ՋԻ-ԷՄ-ՋԻ Ինթիրիորս</p>
+    <p className="text-sm">Ջի–Էմ–Ջի Ինթիրիորս ստուդիան <br /> հիմնադրվել է 2018 թվականին...</p>
+  </div>
+</div>
+<div></div>
     </>
   );
 }
