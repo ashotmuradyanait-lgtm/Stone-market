@@ -1,13 +1,13 @@
 import React from "react";
 
-function Dizaynerner(){
+function Dizayner(){
     return(
         <>
-        <div className="text-center text-green">
+        <div>
             <h1>Դիզայներներ</h1>
+            
         </div>
-        <p></p>
         </>
     );
 }
-export default Dizaynerner;
+export default Dizayner;

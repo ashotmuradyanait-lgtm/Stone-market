@@ -78,8 +78,11 @@ function Home() {
       Dadoyan Wood
     </a>
   </div>
-
 </div>
+<div>
+    <h1 className="text-center p-4 text-3xl font-semibold">Դիզայներներ</h1>
+</div>
+<div></div>
     </>
   );
 }
