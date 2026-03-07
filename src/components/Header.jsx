@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Header() {
   return (
@@ -16,7 +17,7 @@ function Header() {
     <p className="font-GHEAGrpalatReg font-bold">Խանութ</p>
     <p className="font-GHEAGrpalatReg font-bold">Դիզայներներ</p>
     <p className="font-GHEAGrpalatReg font-bold">Մեր մասին</p>
-    <p className="font-GHEAGrpalatReg font-bold">Կապ</p>
+    <Link to="/kap" className="font-GHEAGrpalatReg font-bold">Կապ</Link>
   </div>
 
   <div className="flex gap-4 lg:gap-6">
