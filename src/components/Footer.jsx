@@ -73,10 +73,14 @@ function Footer(){
 
     <div className="text-white text-sm space-y-2">
       <p>Հետևե՜ք մեզ սոցցանցերում</p>
-      <div></div>
-      <img src="https://www.stonemarket.am/icons/instagram.svg" alt="" />
+      <div className="flex">
+        <img src="https://www.stonemarket.am/icons/instagram.svg" alt="" />
       <p>stonemarket.am</p>
-      <p>Stone Market</p>
+      </div>
+      <div>
+        <img src="https://www.stonemarket.am/icons/facebook-white.svg" alt="" />
+          <p>Stone Market</p>
+      </div>
     </div>
 
   </div>
