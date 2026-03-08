@@ -3,7 +3,7 @@ import React from "react";
 function Footer(){
     return(
         <>
-        <div className="bg-gray-900 h-[800px] w-[1520px]">
+        <div className="bg-gray-900 h-[800px] w-full">
             <div className="flex gap-6">
             <div className="з-4 border border-white h-[400px] w-[500px] rounded-lg">
                 <p className="text-white font-bold text-2xl p-4">Հետադարձ կապ</p>
@@ -21,7 +21,7 @@ function Footer(){
             </div>
              <img className="h-[400px] w-[900px] rounded-lg" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Ffeedback.webp&w=1920&q=75" alt="" />
         </div>
-        <p className="p-4 border-white border w-[1520px]"></p>
+        <p className="p-4 border-white border-top w-full"></p>
         <div className="flex gap-20 p-6">
         <div>
             <img className="p-4" src="https://www.stonemarket.am/icons/logo-light.svg" alt="" />
