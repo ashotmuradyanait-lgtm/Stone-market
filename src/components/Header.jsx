@@ -13,7 +13,7 @@ function Header() {
   />
 
   <div className="flex flex-wrap justify-center gap-4 lg:gap-8 mb-4 lg:mb-0">
-    <p className="font-GHEAGrpalatReg font-bold">Գլխավոր</p>
+    <Link to="/" className="font-GHEAGrpalatReg font-bold">Գլխավոր</Link>
     <p className="font-GHEAGrpalatReg font-bold">Խանութ</p>
     <p className="font-GHEAGrpalatReg font-bold">Դիզայներներ</p>
     <p className="font-GHEAGrpalatReg font-bold">Մեր մասին</p>
