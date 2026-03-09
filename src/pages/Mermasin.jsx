@@ -25,6 +25,14 @@ function Mermasin(){
         միավորում ենք արտադրողներին, դիզայներներին, ճարտարապետներին և մատակարարներին՝ ստեղծելով բաց, թափանցիկ և առաջադեմ <br />
          միջավայր, որտեղ յուրաքանչյուր բիզնես կարող է ներկայացնել իր արտադրանքը, պատմությունը և ոճը։</p>
        </div>
+       <div className="p-10">
+        <h1 className="text-center font-semibold text-xl font-[Arm_Hmks_Bebas_Neue]">Մեր առաքելությունը</h1>
+        <br />
+        <p className="font-semibold text-center">Արտադրողներին և դիզայներներին տալ իրական հարթակ՝որտեղ քարը դառնում է բրենդ, իսկ արտադրանքը՝ պատմություն։ Stonemarket-ը <br />
+         կառուցված է գաղափարի շուրջ՝</p>
+       </div>
+       <p className="text-center font-semibold font-[Arm_Hmks_Bebas_Neue]">«Հայկական բնական քարը պետք է խոսի ինքն իր անունից՝ որակով, դիզայնով և վստահությամբ»։</p>
+       <p className="text-center font-semibold text-3xl p-16">Մեր Նախագծերը</p>
        <div></div>
         </>
     );
