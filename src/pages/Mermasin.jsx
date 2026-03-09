@@ -51,6 +51,21 @@ function Mermasin(){
         </div>
        </div>
 
+       <div className="p-2 flex gap-8">
+        <div>
+            <img className="h-[350px] w-[700px] rounded-[20px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Fproject2.webp&w=1920&q=75" alt="" />
+        </div>
+        <div className="p-10">
+            <p className="font-semibold text-xl">Սարարտ Սթոուն</p>
+            <br />
+            <p className="text-semibold">Հայաստանի հարստություններից ու սիմվոլներից մեկը՝ սև տուֆը, չէր կարող ներգրավված <br />
+             չլինել մեր գործունեության մեջ։ «Սարարտ Սթոուն»-ն՝ ընկերությունների խմբին պատկանող <br />
+            նորաբաց կազմակերպություն է, որը մասնագիտացած է սև տուֆի արդյունաբերության մեջ: <br />
+            Մեր մասնագետներն իրենց տարիների ձեռքբերած փորձն ու նորարական լուծումներն են <br />
+            ներդնում որակի և հուսալիության ապահովման համար։</p>
+        </div>
+       </div>
+
        <div></div>
         </>
     );
