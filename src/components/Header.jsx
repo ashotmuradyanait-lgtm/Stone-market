@@ -16,7 +16,7 @@ function Header() {
     <Link to="/" className="font-GHEAGrpalatReg font-bold">Գլխավոր</Link>
     <p className="font-GHEAGrpalatReg font-bold">Խանութ</p>
     <Link to="/design" className="font-GHEAGrpalatReg font-bold">Դիզայներներ</Link>
-    <p className="font-GHEAGrpalatReg font-bold">Մեր մասին</p>
+    <Link to="/mermasin" className="font-GHEAGrpalatReg font-bold">Մեր մասին</Link>
     <Link to="/kap" className="font-GHEAGrpalatReg font-bold">Կապ</Link>
   </div>
 
