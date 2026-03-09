@@ -66,6 +66,20 @@ function Mermasin(){
         </div>
        </div>
 
+       <div className="flex p-4 gap-8">
+        <div className="p-4">
+            <p className="font-semibold text-xl">Սթոուն հոլդինգ</p>
+            <p className="text-semibold">«Սթոուն Հոլդինգ» ընկերությունը մասնագիտացած է երեսպատման սալիկների, քիվերի, <br />
+             ճարտարապետական բարդ դետալների արտադրության և վերամշակման մեջ: <br />
+            Ընկերությունը ապահովում է որակի բարձր չափանիշներ և հուսալի ծառայություններ, ինչի <br />
+            շնորհիվ վստահելի գործընկեր է հանդիսանում ոչ միայն Հայաստանի, այլև մեր <br />
+             օտարերկրյա գործընկերների համար։</p>
+        </div>
+        <div>
+            <img className="h-[350px] w-[700px] rounded-[20px]" src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Fproject3.jpeg&w=1920&q=75" alt="" />
+        </div>
+       </div>
+
        <div></div>
         </>
     );
