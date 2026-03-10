@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
 import Kap from "./pages/Kap.jsx";
+import Xanut from "./pages/Xanut.jsx";
 import Mermasin from "./pages/Mermasin.jsx";
 import Design from "./pages/Design.jsx"
 import Home from "./pages/Home.jsx";
@@ -18,6 +19,7 @@ function App() {
         <Route path="/kap" element={<Kap />} />
         <Route path="/design" element={<Design />} />
         <Route path="/mermasin" element={<Mermasin />} />
+        <Route path="/xanut" element={<Xanut />} />
       </Routes>
       <Footer />
     </>

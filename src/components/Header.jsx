@@ -14,7 +14,7 @@ function Header() {
 
   <div className="flex flex-wrap justify-center gap-4 lg:gap-8 mb-4 lg:mb-0">
     <Link to="/" className="font-GHEAGrpalatReg font-bold">Գլխավոր</Link>
-    <p className="font-GHEAGrpalatReg font-bold">Խանութ</p>
+    <Link to="/xanut" className="font-GHEAGrpalatReg font-bold">Խանութ</Link>
     <Link to="/design" className="font-GHEAGrpalatReg font-bold">Դիզայներներ</Link>
     <Link to="/mermasin" className="font-GHEAGrpalatReg font-bold">Մեր մասին</Link>
     <Link to="/kap" className="font-GHEAGrpalatReg font-bold">Կապ</Link>

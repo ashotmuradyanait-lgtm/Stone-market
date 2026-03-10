@@ -88,8 +88,12 @@ function Footer(){
   <div className="flex flex-col md:flex-row items-center justify-center gap-4 pb-10">
     <p className="text-white text-sm">Ներբեռնեք մեր հավելվածը</p>
 
-    <img src="https://www.stonemarket.am/icons/app-store.svg" alt="" />
-    <img src="https://www.stonemarket.am/icons/google-play.svg" alt="" />
+<a href="https://apps.apple.com/am/app/stone-market-platform/id6453761130">
+  <img src="https://www.stonemarket.am/icons/app-store.svg" alt="" />
+</a>
+<a href="https://play.google.com/store/apps/details?id=com.petro_stone.stone_market">
+      <img src="https://www.stonemarket.am/icons/google-play.svg" alt="" />
+</a>
   </div>
 
 </div>
