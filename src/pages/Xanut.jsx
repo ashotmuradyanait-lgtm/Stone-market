@@ -286,6 +286,62 @@ function Xanut(){
                 </div>
             </div>
             </div>
+
+            <div className="flex gap-4 pt-8">
+                <div className="flex justify-center">
+                <div className="bg-[#ffffff] h-[350px] w-[350px] rounded-[20px]">
+                    <img className="h-[200px] w-[320px] rounded-lg mx-auto" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F35--1771352101825.webp&w=1920&q=75" alt="" />
+                    <p className="font-semibold p-2 px-4">Բուչարդա N003</p>
+                    <p className="px-4 text-[15px]">Նախատեսված է բնական քարի մակերեսը <br />
+                     կոպտացնելու, դեկորատիվ տեսք տալու և...</p>
+                    <div className="flex">
+                     <p className="font-semibold px-4 pt-7 text-[20px]">75,000Դր.</p>
+                     <img className="border border-green-500 h-[30px] w-[30px] rounded-lg" src="https://www.stonemarket.am/icons/add-to-cart-black.svg" alt="" />
+                     </div>
+                </div>
+            </div>
+
+            <div className="flex justify-center">
+                <div className="bg-[#ffffff] h-[350px] w-[350px] rounded-[20px]">
+                    <img className="h-[200px] w-[320px] rounded-lg mx-auto" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F33--1771352042947.webp&w=1920&q=75" alt="" />
+                    <p className="font-semibold p-2 px-4">Բուչարդա N002</p>
+                    <p className="px-4 text-[15px]">Նախատեսված է բնական քարի մակերեսը <br />
+                     կոպտացնելու, դեկորատիվ տեսք տալու և...</p>
+                    <div className="flex">
+                     <p className="font-semibold px-4 pt-7 text-[20px]">46,000Դր.</p>
+                     <img className="border border-green-500 h-[30px] w-[30px] rounded-lg" src="https://www.stonemarket.am/icons/add-to-cart-black.svg" alt="" />
+                     </div>
+                </div>
+            </div>
+
+            <div className="flex justify-center">
+                <div className="bg-[#ffffff] h-[350px] w-[350px] rounded-[20px]">
+                    <img className="h-[200px] w-[320px] rounded-lg mx-auto" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F32--1771351971555.webp&w=1920&q=75" alt="" />
+                    <p className="font-semibold p-2 px-4">Բուչարդա N001</p>
+                    <p className="px-4 text-[15px]">Նախատեսված է բնական քարի մակերեսը <br />
+                     կոպտացնելու, դեկորատիվ տեսք տալու և...</p>
+                    <div className="flex">
+                     <p className="font-semibold px-4 pt-7 text-[20px]">16,000Դր.</p>
+                     <img className="border border-green-500 h-[30px] w-[30px] rounded-lg" src="https://www.stonemarket.am/icons/add-to-cart-black.svg" alt="" />
+                     </div>
+                </div>
+            </div>
+
+            <div className="flex justify-center">
+                <div className="bg-[#ffffff] h-[350px] w-[350px] rounded-[20px]">
+                    <img className="h-[200px] w-[320px] rounded-lg mx-auto" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F27--1771351250950.webp&w=1920&q=75" alt="" />
+                    <p className="font-semibold p-2 px-4">Ձևավոր ֆրեզ N017</p>
+                    <p className="px-4 text-[15px]">Նախատեսված է քարի եզրերը կլորացնելու, <br />
+                     ձևավորելու համար։...</p>
+                    <div className="flex">
+                     <p className="font-semibold px-4 pt-7 text-[20px]">31,000Դր.</p>
+                     <img className="border border-green-500 h-[30px] w-[30px] rounded-lg" src="https://www.stonemarket.am/icons/add-to-cart-black.svg" alt="" />
+                     </div>
+                </div>
+            </div>
+            </div>
+
+            <div></div>
         </div>
         </>
     );
