@@ -179,6 +179,59 @@ function Xanut(){
                 </div>
             </div>
             </div>
+
+            <div className="flex gap-4 pt-8">
+                <div className="flex justify-center">
+                <div className="bg-[#ffffff] h-[350px] w-[350px] rounded-[20px]">
+                    <img className="h-[200px] w-[320px] rounded-lg mx-auto" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N090--1772183225619.webp&w=1920&q=75" alt="" />
+                    <p className="font-semibold p-2 px-4">Տրավերտինե սեղան N090</p>
+                    <p className="px-4 text-[15px]">Սեղան բնական տրավերտին քարից՝ <br />
+                     նրբաճաշակ և ամուր ձևավորմամբ։...</p>
+                    <div className="flex">
+                     <p className="font-semibold px-4 pt-7 text-[20px]">300,000Դր.</p>
+                     <img className="border border-green-500 h-[30px] w-[30px] rounded-lg" src="https://www.stonemarket.am/icons/add-to-cart-black.svg" alt="" />
+                     </div>
+                </div>
+            </div>
+
+                <div className="flex justify-center">
+                <div className="bg-[#ffffff] h-[350px] w-[350px] rounded-[20px]">
+                    <img className="h-[200px] w-[320px] rounded-lg mx-auto" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F49--1772182708560.webp&w=1920&q=75" alt="" />
+                    <p className="font-semibold p-2 px-4">Ճոպանի ռետինե անիվ N001</p>
+                    <p className="px-4 text-[15px]">Չափս - 380մմ</p>
+                    <div className="flex">
+                     <p className="font-semibold px-4 pt-7 text-[20px]">18,000Դր.</p>
+                     <img className="border border-green-500 h-[30px] w-[30px] rounded-lg" src="https://www.stonemarket.am/icons/add-to-cart-black.svg" alt="" />
+                     </div>
+                </div>
+            </div>
+
+            <div className="flex justify-center">
+                <div className="bg-[#ffffff] h-[350px] w-[350px] rounded-[20px]">
+                    <img className="h-[200px] w-[320px] rounded-lg mx-auto" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N087--1771516046630.webp&w=1920&q=75" alt="" />
+                    <p className="font-semibold p-2 px-4">Տրավերտինե սեղան N087</p>
+                    <p className="px-4 text-[15px]">Բնական քարե սեղան՝ քանդակային հիմքով <br />
+                     և փափուկ կորություններով, որոնք...</p>
+                    <div className="flex">
+                     <p className="font-semibold px-4 pt-7 text-[20px]">650,000Դր.</p>
+                     <img className="border border-green-500 h-[30px] w-[30px] rounded-lg" src="https://www.stonemarket.am/icons/add-to-cart-black.svg" alt="" />
+                     </div>
+                </div>
+            </div>
+
+            <div className="flex justify-center">
+                <div className="bg-[#ffffff] h-[350px] w-[350px] rounded-[20px]">
+                    <img className="h-[200px] w-[320px] rounded-lg mx-auto" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N083--1771513468233.webp&w=1920&q=75" alt="" />
+                    <p className="font-semibold p-2 px-4">Տրավերտինե սեղան N083</p>
+                    <p className="px-4 text-[15px]">Մինիմալիստական քարե սեղան՝ հստակ <br />
+                     գծերով և բնական տրավերտինի նուրբ...</p>
+                    <div className="flex">
+                     <p className="font-semibold px-4 pt-7 text-[20px]">420,000Դր.</p>
+                     <img className="border border-green-500 h-[30px] w-[30px] rounded-lg" src="https://www.stonemarket.am/icons/add-to-cart-black.svg" alt="" />
+                     </div>
+                </div>
+            </div>
+            </div>
         </div>
         </>
     );
