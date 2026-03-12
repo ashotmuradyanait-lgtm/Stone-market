@@ -22,9 +22,9 @@ function Xanut(){
             <p className="border border-gray rounded-lg h-[35px] w-[130px] text-center hover:border-green-500 ">Mane Tiles</p>
             </div>
 
-            <div>
-                <div>
-                    
+            <div className="flex justify-center">
+                <div className="bg-[#ffffff] h-[350px] w-[300px] rounded-[20px]">
+                    <img src="" alt="" />
                 </div>
             </div>
         </div>
