@@ -23,8 +23,13 @@ function Xanut(){
             </div>
 
             <div className="flex justify-center">
-                <div className="bg-[#ffffff] h-[350px] w-[300px] rounded-[20px]">
-                    <img src="" alt="" />
+                <div className="bg-[#ffffff] h-[350px] w-[350px] rounded-[20px]">
+                    <img className="h-[200px] w-[320px] rounded-lg mx-auto" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N073-1--1772700511503.webp&w=1920&q=75" alt="" />
+                    <p className="font-semibold p-2 px-4">Բետոնե Սեղան N073</p>
+                    <p className="px-4 text-[15px]">Սեղան բետոնից՝ յուրահատուկ և <br />
+                     արտահայտիչ դիզայնով։...</p>
+                     <p className="font-semibold px-4 pt-7 text-[20px]">600,000Դր.</p>
+                     <i className="border border-green h-[30px] w-[30px]" class="fa fa-cart-plus" aria-hidden="true"></i>
                 </div>
             </div>
         </div>
