@@ -341,7 +341,86 @@ function Xanut(){
             </div>
             </div>
 
-            <div></div>
+            <div className="flex gap-4 pt-8">
+                <div className="flex justify-center">
+                <div className="bg-[#ffffff] h-[350px] w-[350px] rounded-[20px]">
+                    <img className="h-[200px] w-[320px] rounded-lg mx-auto" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F20--1771351131254.webp&w=1920&q=75" alt="" />
+                    <p className="font-semibold p-2 px-4">Ձևավոր ֆրեզ N015</p>
+                    <p className="px-4 text-[15px]">Նախատեսված է քարի եզրերը կլորացնելու, <br />
+                     ձևավորելու համար։...</p>
+                    <div className="flex">
+                     <p className="font-semibold px-4 pt-7 text-[20px]">22,000Դր.</p>
+                     <img className="border border-green-500 h-[30px] w-[30px] rounded-lg" src="https://www.stonemarket.am/icons/add-to-cart-black.svg" alt="" />
+                     </div>
+                </div>
+            </div>
+
+            <div className="flex justify-center">
+                <div className="bg-[#ffffff] h-[350px] w-[350px] rounded-[20px]">
+                    <img className="h-[200px] w-[320px] rounded-lg mx-auto" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F19--1771351056964.webp&w=1920&q=75" alt="" />
+                    <p className="font-semibold p-2 px-4">Ձևավոր ֆրեզ N014</p>
+                    <p className="px-4 text-[15px]">Նախատեսված է քարի եզրերը կլորացնելու, <br />
+                     ձևավորելու համար։...</p>
+                    <div className="flex">
+                     <p className="font-semibold px-4 pt-7 text-[20px]">23,000Դր.</p>
+                     <img className="border border-green-500 h-[30px] w-[30px] rounded-lg" src="https://www.stonemarket.am/icons/add-to-cart-black.svg" alt="" />
+                     </div>
+                </div>
+            </div>
+
+            <div className="flex justify-center">
+                <div className="bg-[#ffffff] h-[350px] w-[350px] rounded-[20px]">
+                    <img className="h-[200px] w-[320px] rounded-lg mx-auto" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F18--1771350672145.webp&w=1920&q=75" alt="" />
+                    <p className="font-semibold p-2 px-4">Ձևավոր ֆրեզ N013</p>
+                    <p className="px-4 text-[15px]">Նախատեսված է քարի եզրերը կլորացնելու, <br />
+                     ձևավորելու համար։...</p>
+                    <div className="flex">
+                     <p className="font-semibold px-4 pt-7 text-[20px]">22,000Դր.</p>
+                     <img className="border border-green-500 h-[30px] w-[30px] rounded-lg" src="https://www.stonemarket.am/icons/add-to-cart-black.svg" alt="" />
+                     </div>
+                </div>
+            </div>
+
+            <div className="flex justify-center">
+                <div className="bg-[#ffffff] h-[350px] w-[350px] rounded-[20px]">
+                    <img className="h-[200px] w-[320px] rounded-lg mx-auto" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F15--1771350602955.webp&w=1920&q=75" alt="" />
+                    <p className="font-semibold p-2 px-4">Ձևավոր ֆրեզ N012</p>
+                    <p className="px-4 text-[15px]">Նախատեսված է քարի եզրերը կլորացնելու, <br />
+                     ձևավորելու համար։...</p>
+                    <div className="flex">
+                     <p className="font-semibold px-4 pt-7 text-[20px]">31,000Դր.</p>
+                     <img className="border border-green-500 h-[30px] w-[30px] rounded-lg" src="https://www.stonemarket.am/icons/add-to-cart-black.svg" alt="" />
+                     </div>
+                </div>
+            </div>
+            </div>
+            <div className="flex gap-4 pt-8">
+                <div className="flex">
+                <div className="bg-[#ffffff] h-[350px] w-[350px] rounded-[20px]">
+                    <img className="h-[200px] w-[320px] rounded-lg mx-auto" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F14--1771350502718.webp&w=1920&q=75" alt="" />
+                    <p className="font-semibold p-2 px-4">Ձևավոր ֆրեզ N011</p>
+                    <p className="px-4 text-[15px]">Նախատեսված է քարի եզրերը կլորացնելու, <br />
+                     ձևավորելու համար։...</p>
+                    <div className="flex">
+                     <p className="font-semibold px-4 pt-7 text-[20px]">26,000Դր.</p>
+                     <img className="border border-green-500 h-[30px] w-[30px] rounded-lg" src="https://www.stonemarket.am/icons/add-to-cart-black.svg" alt="" />
+                     </div>
+                </div>
+            </div>
+
+            <div className="flex">
+                <div className="bg-[#ffffff] h-[350px] w-[350px] rounded-[20px]">
+                    <img className="h-[200px] w-[320px] rounded-lg mx-auto" src="https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F13--1771350382214.webp&w=1920&q=75" alt="" />
+                    <p className="font-semibold p-2 px-4">Ձևավոր ֆրեզ N010</p>
+                    <p className="px-4 text-[15px]">Նախատեսված է քարի եզրերը կլորացնելու, <br />
+                     ձևավորելու համար։...</p>
+                    <div className="flex">
+                     <p className="font-semibold px-4 pt-7 text-[20px]">23,000Դր.</p>
+                     <img className="border border-green-500 h-[30px] w-[30px] rounded-lg" src="https://www.stonemarket.am/icons/add-to-cart-black.svg" alt="" />
+                     </div>
+                </div>
+            </div>
+            </div>
         </div>
         </>
     );
