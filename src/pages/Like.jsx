@@ -16,7 +16,7 @@ function Like({ wishlist, onLike }) {
                 {wishlist.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-2xl shadow-sm">
                         <i className="fa fa-heart-o text-5xl text-gray-300 mb-4"></i>
-                        <p className="text-gray-500 text-lg">Ձեր հավանածների ցուցակը դատարկ է։</p>
+                        <p className="text-gray-500 text-lg">Այս պահին ավելացված նախընտրած ապրանքներ չկան</p>
                         <Link to="/xanut" className="text-green-600 font-semibold mt-4 inline-block hover:underline">
                             Գնալ խանութ →
                         </Link>

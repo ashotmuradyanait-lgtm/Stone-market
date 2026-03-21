@@ -38,7 +38,7 @@ function Xanut({ onLike, wishlist = [] }) {
 
             <div className="px-14 p-8 flex gap-2 flex-wrap">
                 <p className="font-semibold">Կատեգորիա:</p>
-                {["Բնական քար", "Արհեստական քար", "Հաստոցներ", "Քիմիական նյութեր"].map((cat) => (
+                {["Բնական քար", "Արհեստական քար", "Հաստոցներ","Քարամշակման պարագաներ", "Քիմիական նյութեր","Արտադրական ծառայություններ","Mane Tiles"].map((cat) => (
                     <p key={cat} className="border border-gray-300 rounded-lg px-4 py-1 text-center hover:border-green-500 cursor-pointer bg-white transition-all shadow-sm">
                         {cat}
                     </p>

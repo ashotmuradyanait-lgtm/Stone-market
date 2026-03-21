@@ -39,18 +39,16 @@ function App() {
         <Route path="/kap" element={<Kap />} />
         <Route path="/design" element={<Design />} />
         <Route path="/mermasin" element={<Mermasin />} />
-        
-        {/* Xanut-ին տալիս ենք ֆունկցիան ու ցուցակը */}
         <Route 
           path="/xanut" 
           element={<Xanut onLike={handleLike} wishlist={wishlist} />} 
         />
         
-        {/* Like էջին տալիս ենք հենց wishlist-ը, որ ցույց տա ընտրվածները */}
         <Route 
           path="/like" 
           element={<Like wishlist={wishlist} onLike={handleLike} />} 
         />
+        <Route path="/project1" element={<Project1 />} />
       </Routes>
       <Footer />
     </>
