@@ -1,4 +1,4 @@
-
+import { Link } from 'react-router-dom';
 import React from 'react';
 
 function Xanut({ onLike, wishlist = [] }) {
@@ -50,7 +50,8 @@ function Xanut({ onLike, wishlist = [] }) {
                     const isLiked = wishlist.some(fav => fav.name === item.name);
 
                     return (
-                        <div key={index} className="bg-white h-[380px] w-[300px] rounded-[20px] shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+                        <Link to={`/project/${index}`} key={index}
+                             className="bg-white h-[380px] w-[300px] rounded-[20px] shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
                             <div className="relative h-[220px] p-2">
                                 <img 
                                     className="h-full w-full object-contain rounded-t-lg" 
@@ -63,7 +64,10 @@ function Xanut({ onLike, wishlist = [] }) {
                                         ${isLiked ? 'bg-red-500' : 'bg-gray-100 hover:bg-gray-200'}`} 
                                     src={isLiked ? "https://www.stonemarket.am/icons/like-white.svg" : "https://www.stonemarket.am/icons/like-black.svg"} 
                                     alt="like"
-                                    onClick={() => onLike(item)} 
+                                    onClick={(e) => {
+                                    e.stopPropagation();
+                                    onLike(item);
+                                    }}
                                 />
                             </div>
 
@@ -81,7 +85,8 @@ function Xanut({ onLike, wishlist = [] }) {
                                     />
                                 </div>
                             </div>
-                        </div>
+                        </Link>
+                        
                     );
                 })}
             </div>

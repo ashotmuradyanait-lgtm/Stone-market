@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { useState } from "react"; // Ավելացրինք սա
+import { useState } from "react"; 
 
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
@@ -11,19 +11,18 @@ import Mermasin from "./pages/Mermasin.jsx";
 import Design from "./pages/Design.jsx";
 import Home from "./pages/Home.jsx";
 import Dizayner from "./pages/Dizayner.jsx";
+import Project1 from "./designs/Project.jsx";
 
 function App() {
-  // 1. Ստեղծում ենք wishlist-ը այստեղ
   const [wishlist, setWishlist] = useState([]);
 
-  // 2. Ֆունկցիա՝ սրտիկին սեղմելու համար
   const handleLike = (product) => {
     setWishlist((prev) => {
       const isExist = prev.find((item) => item.name === product.name);
       if (isExist) {
-        return prev.filter((item) => item.name !== product.name); // Հեռացնել
+        return prev.filter((item) => item.name !== product.name); 
       } else {
-        return [...prev, product]; // Ավելացնել
+        return [...prev, product]; 
       }
     });
   };
@@ -48,7 +47,7 @@ function App() {
           path="/like" 
           element={<Like wishlist={wishlist} onLike={handleLike} />} 
         />
-        <Route path="/project1" element={<Project1 />} />
+        <Route path="/project/:id" element={<Project1 />} />
       </Routes>
       <Footer />
     </>
