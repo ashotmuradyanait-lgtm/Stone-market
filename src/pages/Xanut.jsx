@@ -50,15 +50,16 @@ function Xanut({ onLike, wishlist = [] }) {
                     const isLiked = wishlist.some(fav => fav.name === item.name);
 
                     return (
-                        <Link to={`/project/${index}`} key={index}
+                        <div key={index}
                              className="bg-white h-[380px] w-[300px] rounded-[20px] shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
                             <div className="relative h-[220px] p-2">
+                            <Link to={`/project/${index}`}>
                                 <img 
                                     className="h-full w-full object-contain rounded-t-lg" 
                                     src={`https://www.stonemarket.am/_next/image?url=${encodeURIComponent(item.img)}&w=1920&q=75`} 
                                     alt={item.name} 
                                 />
-                                
+                            </Link>
                                 <img 
                                     className={`h-[38px] w-[38px] p-2 rounded-lg absolute bottom-2 right-4 cursor-pointer transition-all shadow-sm
                                         ${isLiked ? 'bg-red-500' : 'bg-gray-100 hover:bg-gray-200'}`} 
@@ -69,7 +70,7 @@ function Xanut({ onLike, wishlist = [] }) {
                                     onLike(item);
                                     }}
                                 />
-                            </div>
+                                </div> 
 
                             <div className="p-4">
                                 <p className="font-semibold text-sm truncate">{item.name}</p>
@@ -85,7 +86,7 @@ function Xanut({ onLike, wishlist = [] }) {
                                     />
                                 </div>
                             </div>
-                        </Link>
+                        </div>
                         
                     );
                 })}
