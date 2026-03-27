@@ -1,11 +1,9 @@
 import { Link } from "react-router-dom";
 
-// Ավելացրինք { wishlistCount } որպես prop
-function Header({ wishlistCount }) {
+function Header({ wishlistCount, unreadMessages }) {
   return (
     <>
       <div className="flex flex-col lg:flex-row lg:gap-70 p-4 lg:p-6 items-center lg:items-start justify-between">
-
         <img
           className="mb-4 lg:mb-0"
           src="https://www.stonemarket.am/icons/logo-primary.svg"
@@ -19,8 +17,13 @@ function Header({ wishlistCount }) {
           <Link to="/mermasin" className="font-GHEAGrpalatReg font-bold">Մեր մասին</Link>
           <Link to="/kap" className="font-GHEAGrpalatReg font-bold">Կապ</Link>
 
-          <Link to="/login" className="font-GHEAGrpalatReg font-bold text-blue-500">
+          <Link to="/login" className="relative font-GHEAGrpalatReg font-bold text-blue-500">
             Login
+            {unreadMessages > 0 && (
+              <span className="absolute -top-3 -right-4 bg-red-600 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">
+                {unreadMessages}
+              </span>
+            )}
           </Link>
         </div>
 
@@ -30,7 +33,6 @@ function Header({ wishlistCount }) {
 
           <Link to="/like" className="relative">
             <i className="fa fa-heart text-xl"></i>
-
             {wishlistCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                 {wishlistCount}
@@ -46,7 +48,6 @@ function Header({ wishlistCount }) {
             alt="lang"
           />
         </div>
-
       </div>
     </>
   );
