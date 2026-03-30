@@ -1,42 +1,62 @@
-import { ref, push, set, onValue, onDisconnect, serverTimestamp } from "firebase/database";
+import { ref, push, set, onValue, serverTimestamp, onDisconnect } from "firebase/database";
 import { db } from "./config";
 
-const playSound = () => {
+// 1. Ձայնային ազդանշանի ֆունկցիա
+const playSmsSound = () => {
   const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3');
-
-  audio.play().catch(err => console.warn("Ձայնը հնարավոր չեղավ նվագարկել:", err));
+  // Կամ եթե ունես public/sms.mp3, օգտագործիր՝ new Audio('/sms.mp3');
+  audio.play().catch(err => console.warn("Ձայնի նվագարկման արգելք (Browser policy):", err));
 };
 
-export const sendMessage = (message) => {
-  const msgRef = push(ref(db, "messages"));
+/**
+ * 2. Օգնող ֆունկցիա՝ սարքում է ունիկալ և նույնական ID երկու օգտատիրոջ համար
+ */
+export const getChatId = (uid1, uid2) => {
+  return [uid1, uid2].sort().join("_");
+};
+
+/**
+ * 3. Հաղորդագրություն ուղարկելու ֆունկցիան
+ */
+export const sendMessage = (chatPath, messageData) => {
+  const targetPath = chatPath || "messages";
+  const msgRef = push(ref(db, targetPath));
+  
   return set(msgRef, {
-    ...message,
-    createdAt: serverTimestamp(), 
+    ...messageData,
+    createdAt: serverTimestamp(),
   });
 };
 
-export const listenMessages = (cb) => {
-  const msgRef = ref(db, "messages");
+/**
+ * 4. Հաղորդագրությունները լսելու ֆունկցիան + ՁԱՅՆ
+ */
+export const listenMessages = (chatPath, cb) => {
+  const targetPath = chatPath || "messages";
+  const msgRef = ref(db, targetPath);
   
-  let initialLoad = true;
+  let isFirstLoad = true; // Որպեսզի հին նամակների վրա ձայն չհանի
 
   return onValue(msgRef, (snapshot) => {
     const data = snapshot.val() || {};
     const messages = Object.entries(data).map(([id, value]) => ({
       id,
       ...value,
-    }));
+    })).sort((a, b) => a.createdAt - b.createdAt);
 
-    // Եթե սա առաջին բեռնումը չէ, նշանակում է նոր նամակ է եկել
-    if (!initialLoad) {
-      playSound();
+    // Եթե սա առաջին բեռնումը չէ և նոր նամակ կա՝ միացնում ենք ձայնը
+    if (!isFirstLoad && messages.length > 0) {
+      playSmsSound();
     }
-    
-    initialLoad = false;
+
+    isFirstLoad = false;
     cb(messages);
   });
 };
 
+/**
+ * 5. Օգտատիրոջ ստատուսի թարմացում (Online/Offline)
+ */
 export const updateUserStatus = (userId, email) => {
   if (!userId) return;
 
@@ -45,20 +65,25 @@ export const updateUserStatus = (userId, email) => {
 
   onValue(connectedRef, (snapshot) => {
     if (snapshot.val() === true) {
-      set(statusRef, { 
+      const statusData = { 
+        id: userId,
         state: "online", 
         email: email || "Anonymous", 
         lastChanged: serverTimestamp() 
-      });
+      };
 
+      set(statusRef, statusData);
+
+      // Երբ օգտատերը անջատվում է
       onDisconnect(statusRef).set({ 
+        ...statusData,
         state: "offline", 
-        email: email || "Anonymous", 
         lastChanged: serverTimestamp() 
       });
     }
   });
 };
+
 
 export const listenAllStatuses = (cb) => {
   const statusRef = ref(db, "status");

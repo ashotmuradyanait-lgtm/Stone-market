@@ -6,43 +6,53 @@ import {
   updateProfile,
 } from "firebase/auth";
 
-import { getDatabase, ref, set, update } from "firebase/database";
-import { auth } from "./config";
+import { ref, update } from "firebase/database";
+import { auth, db } from "./config"; // Ներմուծում ենք db-ն անմիջապես config-ից
 
-const updateUserData = async (user, displayName = null) => {
-  const db = getDatabase();
-  const userRef = ref(db, `users/${user.uid}`);
+const syncUserStatus = async (user, displayName = null) => {
+  // Օգտագործում ենք արդեն գոյություն ունեցող db-ն
+  const statusRef = ref(db, `status/${user.uid}`);
 
   const data = {
-    uid: user.uid,
+    id: user.uid,
     email: user.email,
-    displayName: displayName || user.displayName || "Անուն",
-    photoURL: user.photoURL || "",
-    lastLogin: Date.now(),
+    displayName: displayName || user.displayName || user.email.split('@')[0],
+    state: "online",
+    last_changed: Date.now(),
   };
 
-  return update(userRef, data);
+  return update(statusRef, data);
 };
-
 
 export const register = async (email, password, displayName) => {
-  const res = await createUserWithEmailAndPassword(auth, email, password);
-  await updateProfile(res.user, { displayName });
-  await updateUserData(res.user, displayName);
-  
-  return res;
+  try {
+    const res = await createUserWithEmailAndPassword(auth, email, password);
+    
+    // Թարմացնում ենք Auth պրոֆիլը
+    await updateProfile(res.user, { displayName });
+    
+    // Սինխրոնացնում ենք բազայի հետ
+    await syncUserStatus(res.user, displayName);
+    
+    return res;
+  } catch (error) {
+    throw error;
+  }
 };
 
-
 export const login = async (email, password) => {
-  const res = await signInWithEmailAndPassword(auth, email, password);
-  
-  await updateUserData(res.user);
-  
-  return res;
+  try {
+    const res = await signInWithEmailAndPassword(auth, email, password);
+    
+    // Մուտք գործելիս թարմացնում ենք ստատուսը
+    await syncUserStatus(res.user);
+    
+    return res;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const logout = () => signOut(auth);
-
 
 export const observeAuth = (cb) => onAuthStateChanged(auth, cb);

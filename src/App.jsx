@@ -46,7 +46,7 @@ function App() {
     return () => unsub();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
 
   return (
     <>
@@ -63,8 +63,8 @@ function App() {
         <Route path="/like" element={<Like wishlist={wishlist} />} />
         <Route path="/project/:id" element={<Project />} />
 
-        {/* Օգտատիրոջ պրոֆիլի էջ (Դինամիկ) */}
-        <Route path="/profile/:uid" element={<UserProfile />} />
+        {/* Օգտատիրոջ պրոֆիլի էջ */}
+        <Route path="/profile/:uid" element={user ? <UserProfile /> : <Navigate to="/login" />} />
 
         {/* AUTH */}
         <Route
@@ -72,12 +72,21 @@ function App() {
           element={!user ? <Login /> : <Navigate to="/chat" />}
         />
 
+        {/* --- ԿԱՐԵՎՈՐ ՓՈՓՈԽՈՒԹՅՈՒՆՆԵՐԸ ԱՅՍՏԵՂ --- */}
+        
+        {/* Ընդհանուր չատ (Main Chat) */}
         <Route
           path="/chat"
           element={user ? <Chat user={user} /> : <Navigate to="/login" />}
         />
 
-        {/* Default Route */}
+        {/* Անձնական չատ կոնկրետ մարդու հետ (Private Chat) */}
+        <Route
+          path="/chat/:chatId"
+          element={user ? <Chat user={user} /> : <Navigate to="/login" />}
+        />
+
+        {/* Եթե URL-ը սխալ է */}
         <Route
           path="*"
           element={<Navigate to={user ? "/chat" : "/login"} />}
