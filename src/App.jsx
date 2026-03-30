@@ -5,6 +5,7 @@ import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
 import Chat from "./components/Chat.jsx";
 import Login from "./components/Login.jsx";
+import UserProfile from "./pages/UserProfile.jsx"; 
 
 import Home from "./pages/Home.jsx";
 import Design from "./pages/Design.jsx";
@@ -21,7 +22,6 @@ import { setupPresence } from "./firebase/presence";
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
   const [wishlist, setWishlist] = useState([]);
 
   const handleLike = (product) => {
@@ -53,7 +53,7 @@ function App() {
       <Header wishlistCount={wishlist.length} />
 
       <Routes>
-        {/* Public pages */}
+        {/* Հանրային էջեր */}
         <Route path="/" element={<Home />} />
         <Route path="/design" element={<Design />} />
         <Route path="/dizayner" element={<Dizayner />} />
@@ -62,6 +62,9 @@ function App() {
         <Route path="/xanut" element={<Xanut onLike={handleLike} />} />
         <Route path="/like" element={<Like wishlist={wishlist} />} />
         <Route path="/project/:id" element={<Project />} />
+
+        {/* Օգտատիրոջ պրոֆիլի էջ (Դինամիկ) */}
+        <Route path="/profile/:uid" element={<UserProfile />} />
 
         {/* AUTH */}
         <Route
@@ -74,6 +77,7 @@ function App() {
           element={user ? <Chat user={user} /> : <Navigate to="/login" />}
         />
 
+        {/* Default Route */}
         <Route
           path="*"
           element={<Navigate to={user ? "/chat" : "/login"} />}
