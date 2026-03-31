@@ -29,6 +29,7 @@ function Header({ wishlistCount, currentUserUid }) {
 
   return (
     <>
+    <a href="tel:+37443654777">Զանգահարել մեզ</a>
       <div className="flex flex-col lg:flex-row lg:gap-70 p-4 lg:p-6 items-center lg:items-start justify-between">
         <img
           className="mb-4 lg:mb-0"
