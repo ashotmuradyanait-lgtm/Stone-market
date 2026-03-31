@@ -1,9 +1,9 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { listenMessages, sendMessage, updateUserStatus, listenAllStatuses } from "../firebase/chat";
 import { auth, db } from "../firebase/config";
 import { onAuthStateChanged } from "firebase/auth";
 import { Link, useParams } from "react-router-dom"; 
-import { ref, onValue, update, get } from "firebase/database"; // Ավելացվեց update և get
+import { ref, onValue, update } from "firebase/database";
 
 export default function Chat() {
   const { chatId } = useParams(); 
@@ -16,31 +16,36 @@ export default function Chat() {
   
   const scrollRef = useRef(null);
 
-  // --- ՆՈՐ ՖՈՒՆԿՑԻԱ. Նամակները նշել որպես կարդացված ---
-  const markAsRead = async (currentMsgs, currentUser) => {
-    if (!currentUser || currentMsgs.length === 0) return;
+  // --- Օգնող ֆունկցիա ID-ների համար ---
+  const getCorrectChatId = useCallback((id1, id2) => {
+    return [id1, id2].sort().join("_");
+  }, []);
 
-    const chatPath = chatId ? `private_chats/${chatId}` : "messages";
+  // --- Նամակները նշել որպես կարդացված ---
+  const markAsRead = async (currentMsgs, currentUser) => {
+    if (!currentUser || !currentMsgs.length || !chatId) return;
+
     const updates = {};
     let hasUpdates = false;
 
     currentMsgs.forEach((msg) => {
-      // Եթե նամակը իմը չէ (receiver-ը ես եմ) և կարգավիճակը դեռ "unread" է
-      // (Կամ եթե private chat է, ստուգում ենք՝ արդյոք ես եմ ստացողը)
-      const isIncoming = msg.userId !== currentUser.uid;
-      if (isIncoming && msg.status === "unread") {
-        updates[`${chatPath}/${msg.id}/status`] = "read";
+      // Եթե նամակը իմը չէ և "unread" է
+      if (msg.userId !== currentUser.uid && msg.status === "unread") {
+        updates[`private_chats/${chatId}/${msg.id}/status`] = "read";
         hasUpdates = true;
       }
     });
 
     if (hasUpdates) {
-      const dbRef = ref(db);
-      await update(dbRef, updates);
+      try {
+        await update(ref(db), updates);
+      } catch (err) {
+        console.error("Error updating status:", err);
+      }
     }
   };
 
-  // 1. Օգտատիրոջ մուտքի և բոլորի ստատուսների վերահսկում
+  // 1. Auth և Բոլորի ստատուսները
   useEffect(() => {
     const unsubAuth = onAuthStateChanged(auth, (u) => {
       if (u) {
@@ -52,8 +57,7 @@ export default function Chat() {
     });
 
     const unsubStatus = listenAllStatuses((statusList) => {
-      const sorted = statusList.sort((a, b) => (a.state === "online" ? -1 : 1));
-      setAllStatuses(sorted);
+      setAllStatuses(statusList.sort((a, b) => (a.state === "online" ? -1 : 1)));
     });
 
     return () => {
@@ -62,10 +66,11 @@ export default function Chat() {
     };
   }, []);
 
-  // 2. Ակտիվ զրուցակցի տվյալները բեռնելը
+  // 2. Ակտիվ զրուցակցի տվյալները (Private Chat-ի համար)
   useEffect(() => {
     if (chatId && user) {
-      const otherUserId = chatId.split("_").find(id => id !== user.uid);
+      const parts = chatId.split("_");
+      const otherUserId = parts.find(id => id !== user.uid);
       
       if (otherUserId) {
         const userRef = ref(db, `status/${otherUserId}`);
@@ -79,34 +84,28 @@ export default function Chat() {
     }
   }, [chatId, user]);
 
-  // 3. Հաղորդագրությունների լսում
+  // 3. Հաղորդագրությունների լսում (Real-time)
   useEffect(() => {
     const chatPath = chatId ? `private_chats/${chatId}` : "messages";
     
     setLoading(true);
-    setMessages([]); 
-
     const unsubMsg = listenMessages(chatPath, (newMessages) => {
-      const sortedMsgs = newMessages.sort((a, b) => a.createdAt - b.createdAt);
+      const sortedMsgs = [...newMessages].sort((a, b) => a.createdAt - b.createdAt);
       setMessages(sortedMsgs);
       setLoading(false);
       
-      // Հենց նոր նամակներ են գալիս, փորձում ենք նշել որպես կարդացված
-      if (user) {
+      if (user && chatId) {
         markAsRead(sortedMsgs, user);
       }
     });
 
     return () => unsubMsg();
-  }, [chatId, user]); // Ավելացրինք user-ը այստեղ
+  }, [chatId, user]);
 
-  // Ավտոմատ scroll դեպի վերջին նամակը
+  // Scroll դեպի վերջ
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTo({
-        top: scrollRef.current.scrollHeight,
-        behavior: "smooth"
-      });
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
 
@@ -120,7 +119,7 @@ export default function Chat() {
       userId: user.uid, 
       email: user.email,
       displayName: user.displayName || user.email.split('@')[0],
-      status: "unread", // Ավելացնում ենք ստատուսը ուղարկելիս
+      status: "unread",
       createdAt: Date.now()
     });
     
@@ -130,18 +129,19 @@ export default function Chat() {
   return (
     <div className="flex h-screen max-w-6xl mx-auto bg-white shadow-2xl overflow-hidden border-x border-gray-200 font-sans">
       
-      {/* --- SIDEBAR --- */}
+      {/* SIDEBAR */}
       <div className="w-1/4 bg-gray-50 border-r border-gray-200 flex flex-col hidden md:flex">
         <div className="p-5 border-b bg-white flex justify-between items-center">
-          <h3 className="text-lg font-bold text-gray-800 italic uppercase tracking-tighter">Stone Chat</h3>
-          <Link to="/chat" className="text-[10px] bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full font-black hover:bg-indigo-200 transition-all">GLOBAL</Link>
+          <h3 className="text-lg font-bold text-gray-800 tracking-tighter">STONE MARKET</h3>
+          <Link to="/chat" className="text-[10px] bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full font-black">GLOBAL</Link>
         </div>
         
         <div className="flex-1 overflow-y-auto p-3 space-y-2">
           {allStatuses.map((status) => {
             if (status.id === user?.uid) return null;
             
-            const combinedId = user ? [user.uid, status.id].sort().join("_") : null;
+            // Ստեղծում ենք ճիշտ սորտավորված ID
+            const combinedId = user ? getCorrectChatId(user.uid, status.id) : null;
 
             return (
               <Link 
@@ -159,7 +159,7 @@ export default function Chat() {
                 </div>
                 <div className="flex flex-col min-w-0">
                   <p className="text-sm font-bold truncate">{status.displayName || status.email?.split('@')[0]}</p>
-                  <p className="text-[10px] font-medium opacity-70">{status.state}</p>
+                  <p className="text-[10px] opacity-70">{status.state}</p>
                 </div>
               </Link>
             );
@@ -167,46 +167,48 @@ export default function Chat() {
         </div>
       </div>
 
-      {/* --- MAIN CHAT AREA --- */}
-      <div className="flex-1 flex flex-col bg-white relative">
-        <div className="p-4 bg-white border-b flex justify-between items-center shadow-sm z-10">
+      {/* MAIN CHAT */}
+      <div className="flex-1 flex flex-col bg-white">
+        <div className="p-4 bg-white border-b flex justify-between items-center z-10">
           <div>
-            <h2 className="text-lg font-black text-gray-800 leading-none">
-              {chatId ? (activeChatUser?.displayName || activeChatUser?.email?.split('@')[0] || "Private Chat") : "Global Channel"}
+            <h2 className="text-lg font-black text-gray-800">
+              {chatId ? (activeChatUser?.displayName || activeChatUser?.email?.split('@')[0] || "Մասնավոր զրույց") : "Global chat"}
             </h2>
             {chatId && activeChatUser && (
-              <span className={`text-[10px] font-bold uppercase tracking-widest ${activeChatUser.state === 'online' ? 'text-green-500' : 'text-gray-400'}`}>
-                {activeChatUser.state}
+              <span className={`text-[10px] font-bold uppercase ${activeChatUser.state === 'online' ? 'text-green-500' : 'text-gray-400'}`}>
+                • {activeChatUser.state}
               </span>
             )}
           </div>
-          <Link to="/" className="text-gray-500 hover:text-indigo-600 transition-all">
-             <i className="fa fa-home text-xl"></i>
+          <Link to="/" className="text-gray-400 hover:text-indigo-600">
+             Global
           </Link>
         </div>
 
         <div 
           ref={scrollRef} 
-          className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 bg-[url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')] bg-fixed"
+          className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50"
+          style={{backgroundImage: `url('https://www.transparenttextures.com/patterns/cubes.png')`}}
         >
           {loading ? (
-            <div className="flex justify-center items-center h-full text-gray-400 text-sm italic">Բեռնվում է...</div>
-          ) : messages.length === 0 ? (
-            <div className="flex justify-center items-center h-full text-gray-400 text-sm italic">Հաղորդագրություններ չկան:</div>
+            <div className="text-center text-gray-400 mt-10">Loading</div>
           ) : (
             messages.map((msg) => {
               const isMe = msg.userId === user?.uid;
               return (
                 <div key={msg.id} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[80%] p-3 rounded-2xl shadow-sm ${
+                  <div className={`max-w-[75%] p-3 rounded-2xl shadow-sm ${
                     isMe ? "bg-indigo-600 text-white rounded-br-none" : "bg-white text-gray-800 rounded-tl-none border border-gray-100"
                   }`}>
                     {!isMe && !chatId && (
-                      <span className="text-[10px] font-black mb-1 text-indigo-500 uppercase block">
-                        {msg.displayName}
-                      </span>
+                      <span className="text-[10px] font-black text-indigo-500 block mb-1">{msg.displayName}</span>
                     )}
-                    <p className="text-sm font-medium">{msg.text}</p>
+                    <p className="text-sm">{msg.text}</p>
+                    {isMe && chatId && (
+                       <span className="text-[9px] block text-right opacity-70 mt-1">
+                         {msg.status === "read" ? "✓✓" : "✓"}
+                       </span>
+                    )}
                   </div>
                 </div>
               );
@@ -219,15 +221,15 @@ export default function Chat() {
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            placeholder={chatId ? "Գրել անձնական..." : "Գրել բոլորին..."}
-            className="flex-1 p-3 bg-gray-50 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-400 text-sm transition-all"
+            placeholder="Send message"
+            className="flex-1 p-3 bg-gray-50 rounded-2xl outline-none focus:ring-2 focus:ring-indigo-400"
           />
           <button 
             onClick={handleSend}
             disabled={!text.trim() || !user}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 rounded-2xl transition-all active:scale-95 disabled:opacity-50 shadow-lg"
+            className="bg-indigo-600 text-white px-6 rounded-2xl hover:bg-indigo-700 disabled:opacity-50"
           >
-            <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current rotate-45"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            Send
           </button>
         </div>
       </div>
