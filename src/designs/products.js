@@ -3,7 +3,7 @@ const products = [
     id: 0,
     name: "Տրավերտինե սեղան N106",
     price: "500,000Դր.",
-    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N106--1773646122660.webp&w=1920&q=75",
+    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%25C3%2594%25C2%25BF%25C3%2595%25C2%2588%25C3%2594%25C2%25B4_N073-1--1772700511503.webp&w=1920&q=75",
     desc: "Սուրճի սեղան բնական տրավերտին քարից՝ նրբաճաշակ և \n  ժամանակակից դիզայնով։Կլոր ձևն ու ամուր հենակները ստեղծում են ներդաշնակ կառուցվածք։",
     btn: "Ավելացնել զամբյուղում",
     size:"Չափսեր ՝ Բարձրություն - 450մմ Լայնություն - 700մմ երկարություն - 1200մմ Հաստություն - 100մմ Ոտքերի հաստություն - 200մմ"
@@ -12,7 +12,7 @@ const products = [
     id: 1,
     name: "Տրավերտինե սեղան N103",
     price: "400,000Դր.",
-    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N103--1773645548974.webp&w=1920&q=75",
+    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%25C3%2594%25C2%25BF%25C3%2595%25C2%2588%25C3%2594%25C2%25B4_N097--1772606804540.webp&w=1920&q=75",
     desc: "Ճաշասեղան բնական տրավերտին քարից՝ նրբաճաշակ և ժամանակակից դիզայնով։Կլոր ձևը ստեղծում է հարմարավետ և ջերմ միջավայր ընտանեկան հավաքների համար։",
     btn: "Ավելացնել զամբյուղում",
     size:"Չափսեր ՝Բարձրություն - 700մմ Տրամագիծ - 900մմ Երեսի հաստություն - 40մմ"
@@ -21,7 +21,7 @@ const products = [
     id: 2,
     name: "Բետոնե Սեղան N073",
     price: "600,000Դր.",
-    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N073-1--1772700511503.webp&w=1920&q=75",
+    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%25C3%2594%25C2%25BF%25C3%2595%25C2%2588%25C3%2594%25C2%25B4_N093--1772606461964.webp&w=1920&q=75",
     desc: "Սեղան բետոնից՝ յուրահատուկ և արտահայտիչ դիզայնով։Քարային ձևավորված հիմքը համադրված է ապակե մակերեսի հետ՝ ստեղծելով ժամանակակից և տպավորիչ տեսք։",
     btn: "Ավելացնել զամբյուղում",
     size:"Չափսեր ՝Բարձրություն - 400մմ Լայնություն - 700մմ երկարություն - 1300մմ"
@@ -30,7 +30,7 @@ const products = [
     id: 3,
     name: "Տրավերտինե հավաքածու N097",
     price: "2,500,000Դր.",
-    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N097--1772606804540.webp&w=1920&q=75",
+    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%25C3%2594%25C2%25BF%25C3%2595%25C2%2588%25C3%2594%25C2%25B4_N082--1772547557216.webp&w=1920&q=75",
     desc: "Սեղան և նստարաններ բնական տրավերտին քարից՝ նախատեսված բացօթյա կամ պարտեզային տարածքների համար։Կլոր սեղանն ու կիսաշրջանաձև նստարանները ստեղծում են հարմարավետ և ներդաշնակ միջավայր հավաքների համար։",
     btn: "Ավելացնել զամբյուղում",
     size:"Չափսեր ՝Սեղան Բարձրություն - 700մմ Տրամագիծ - 1600մմ"
@@ -39,7 +39,7 @@ const products = [
     id: 4,
     name: "Տրավերտինե հավաքածու N093",
     price: "350,000Դր.",
-    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N093--1772606461964.webp&w=1920&q=75",
+    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%25C3%2594%25C2%25BF%25C3%2595%25C2%2588%25C3%2594%25C2%25B4_N076--1772547139235.webp&w=1920&q=75",
     desc: "Սուրճի սեղան բնական տրավերտին քարից՝ յուրահատուկ և ժամանակակից դիզայնով։Արտահայտիչ կառուցվածքը համադրում է գործնականությունն ու դեկորատիվ տեսքը՝ ստեղծելով առանձնահատուկ շեշտադրում ինտերիերում։",
     btn: "Ավելացնել զամբյուղում",
     size:"Չափսեր ՝Բարձրություն - 500մմ Լայնություն - 700մմ երկարություն - 1400մմ"
@@ -48,7 +48,7 @@ const products = [
     id: 5,
     name: "Տրավերտինե դեկոր N082",
     price: "100,000Դր.",
-    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N082--1772547557216.webp&w=1920&q=75",
+    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%25C3%2594%25C2%25BF%25C3%2595%25C2%2588%25C3%2594%25C2%25B4_N096--1772527028615.webp&w=1920&q=75",
     desc: "Բնական տրավերտին քարից մոմակալ՝ նրբագեղ և ջերմ ձևավորմամբ։Կլոր, հարթ ձևը և բնական հյուսվածքը ստեղծում են հանգիստ ու հարմարավետ մթնոլորտ։",
     btn: "Ավելացնել զամբյուղում",
     size:"Չափսեր ՝Տրամագիծ - 200մմ"
@@ -57,7 +57,7 @@ const products = [
     id: 6,
     name: "Տրավերտինե դեկոր N076",
     price: "55,000Դր.",
-    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N076--1772547139235.webp&w=1920&q=75",
+    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%25C3%2594%25C2%25BF%25C3%2595%25C2%2588%25C3%2594%25C2%25B4_N095--1772526700987.webp&w=1920&q=75",
     desc: "Բնական տրավերտին քարից բաժակի տակդիրների հավաքածու՝ էլեգանտ և գործնական ձևավորմամբ։",
     btn: "Ավելացնել զամբյուղում",
     size:"Չափսեր՝Տրամագիծ - 100 մմ Յուրաքանչյուր մասի հաստությունը - 12 մմ Բաղկացած է 4 մասից"
@@ -66,7 +66,7 @@ const products = [
     id: 7,
     name: "Տրավերտինե սեղան N096",
     price: "700,000Դր.",
-    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N096--1772527028615.webp&w=1920&q=75",
+    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%25C3%2594%25C2%25BF%25C3%2595%25C2%2588%25C3%2594%25C2%25B4_N094--1772526193011.webp&w=1920&q=75",
     desc: "Սուրճի սեղան բնական տրավերտին քարից՝ լակոնիկ և ժամանակակից ձևավորմամբ։Իդեալական ընտրություն է հյուրասենյակի համար՝ հաղորդելով ինտերիերին բնական շքեղություն և հանգիստ երանգներ։",
     btn: "Ավելացնել զամբյուղում",
     size:"Չափսեր ՝Բարձրություն - 400մմ Լայնություն - 600մմ երկարություն - 1400մմ"
@@ -75,7 +75,7 @@ const products = [
     id: 8,
     name: "Տրավերտինե Դեկոր N095",
     price: "150,000Դր.",
-    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N095--1772526700987.webp&w=1920&q=75",
+    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%25C3%2594%25C2%25BF%25C3%2595%25C2%2588%25C3%2594%25C2%25B4_N092--1772525821969.webp&w=1920&q=75",
     desc: "Բնական տրավերտին քարից Դեկոր՝ մինիմալիստական և ժամանակակից դիզայնով։Ամուր կառուցվածքն ու բնական հյուսվածքը հաղորդում են ինտերիերին ջերմություն և նրբաճաշակություն։",
     btn: "Ավելացնել զամբյուղում",
     size:"Չափսեր ՝Բարձրություն - 500մմ Լայնություն - 400մմ երկարություն - 1300մմ"
@@ -84,7 +84,7 @@ const products = [
     id: 9,
     name: "Տրավերտինե տումբա N094",
     price: "420,000Դր.",
-    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N094--1772526193011.webp&w=1920&q=75",
+    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%25C3%2594%25C2%25BF%25C3%2595%25C2%2588%25C3%2594%25C2%25B4_N091--1772525128594.webp&w=1920&q=75",
     desc: "Կոնսոլ բնական տրավերտին քարից՝ էլեգանտ և մինիմալիստական ձևավորմամբ։Կամարաձև դետալները հաղորդում են ինտերիերին յուրահատուկ ոճ և ճարտարապետական շեշտադրում։",
     btn: "Ավելացնել զամբյուղում",
     size:"Չափսեր ՝Բարձրություն - 700մմ Լայնություն - 400մմ երկարություն - 1300մմ"
@@ -93,7 +93,7 @@ const products = [
     id: 10,
     name: "Տրավերտինե սեղան N092",
     price: "140,000Դր.",
-    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N092--1772525821969.webp&w=1920&q=75",
+    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F51--1772289339921.webp&w=1920&q=75",
     desc: "Սեղան բնական տրավերտին քարից՝ յուրահատուկ կորաձև դիզայնով։Բնական երանգներն ու հարթ մշակումը ստեղծում են ջերմ և շքեղ մթնոլորտ։Իդեալական է որպես կողային կամ դեկորատիվ սեղան ժամանակակից ինտերիերի համար։",
     btn: "Ավելացնել զամբյուղում",
     size:"Չափսեր ՝Բարձրություն - 400մմ Լայնություն - 300մմ երկարություն - 300մմ"
@@ -102,7 +102,7 @@ const products = [
     id: 11,
     name: "Տրավերտինե սեղան N091",
     price: "60,000Դր.",
-    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N091--1772525128594.webp&w=1920&q=75",
+    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F50--1772289267500.webp&w=1920&q=75",
     desc: "Սեղան բնական տրավերտին քարից՝ մինիմալիստական և ժամանակակից դիզայնով։Ամուր կառուցվածքն ու բնական երանգները ստեղծում են ներդաշնակ և էլեգանտ միջավայր։",
     btn: "Ավելացնել զամբյուղում",
     size:"Չափսեր ՝Բարձրություն - 600մմ Լայնություն - 400մմ երկարություն - 400մմ"
@@ -111,7 +111,7 @@ const products = [
     id: 12,
     name: "Ճոպանի ռետինե անիվ N003",
     price: "15,000Դր.",
-    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F51--1772289339921.webp&w=1920&q=75",
+    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%25C3%2594%25C2%25BF%25C3%2595%25C2%2588%25C3%2594%25C2%25B4_N090--1772183225619.webp&w=1920&q=75",
     btn: "Ավելացնել զամբյուղում",
     size:"Չափս - 320մմ"
 },
@@ -119,7 +119,7 @@ const products = [
     id: 13,
     name: "Ճոպանի ռետինե անիվ N002",
     price: "7,000Դր.",
-    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F50--1772289267500.webp&w=1920&q=75",
+    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%25C3%2594%25C2%25BF%25C3%2595%25C2%2588%25C3%2594%25C2%25B4_N087--1771516046630.webp&w=1920&q=75",
     btn: "Ավելացնել զամբյուղում",
     size:"Չափս - 200մմ"
 },
@@ -127,7 +127,7 @@ const products = [
     id: 14,
     name: "Տրավերտինե սեղան N090",
     price: "300,000Դր.",
-    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N090--1772183225619.webp&w=1920&q=75",
+    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%25C3%2594%25C2%25BF%25C3%2595%25C2%2588%25C3%2594%25C2%25B4_N083--1771513468233.webp&w=1920&q=75",
     desc: "Սեղան բնական տրավերտին քարից՝ նրբաճաշակ և ամուր ձևավորմամբ։Իդեալական ընտրություն ժամանակակից և մինիմալիստական ինտերիերի համար։",
     btn: "Ավելացնել զամբյուղում",
     size:"Չափսեր ՝Տրամագիծ - 900մմ Երեսի հաստություն - 30մմ Բարձրություն - 700մմ Ոտքերի տրամագիծ - 150մմ"
@@ -136,7 +136,7 @@ const products = [
     id: 15,
     name: "Ճոպանի ռետինե անիվ N001",
     price: "18,000Դր.",
-    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F49--1772182708560.webp&w=1920&q=75",
+    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F45--1771352932080.webp&w=1920&q=75",
     btn: "Ավելացնել զամբյուղում",
     size:"Չափս - 380մմ"
 },
@@ -144,7 +144,7 @@ const products = [
     id: 16,
     name: "Տրավերտինե սեղան N087",
     price: "650,000Դր.",
-    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N087--1771516046630.webp&w=1920&q=75",
+    img: "https://www.stonemarket.am/_next/image?url=https%3A%2F%2Fapi.stonemarket.am%2F42--1771352825805.webp&w=1920&q=75",
     desc: "Բնական քարե սեղան՝ քանդակային հիմքով և փափուկ կորություններով, որոնք հավասարակշռում են զանգվածային կառուցվածքը։",
     btn: "Ավելացնել զամբյուղում",
     size:"Չափսեր՝ Երկարություն - 1100մմ Լայնություն - 700մմ Բարձրություն - 400մմ"

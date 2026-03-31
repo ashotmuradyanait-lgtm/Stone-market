@@ -1,26 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { getDatabase, ref, onValue, query, orderByChild, equalTo } from "firebase/database";
+import { listenUnreadCount } from "../firebase/chat"; // Օգտագործում ենք մեր պատրաստի ֆունկցիան
 
 function Header({ wishlistCount, currentUserUid }) {
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    if (!currentUserUid) return;
+    // Եթե օգտատերը մուտք չի գործել, ոչինչ չենք անում
+    if (!currentUserUid) {
+      setUnreadCount(0);
+      return;
+    }
 
-    const db = getDatabase();
-    const messagesRef = ref(db, 'messages');
-    const unsubscribe = onValue(messagesRef, (snapshot) => {
-      const data = snapshot.val();
-      let count = 0;
-
-      if (data) {
-        Object.values(data).forEach(msg => {
-          if (msg.receiverId === currentUserUid && msg.status === 'unread') {
-            count++;
-          }
-        });
-      }
+    // Լսում ենք չկարդացած նամակների քանակը բոլոր չատերից
+    const unsubscribe = listenUnreadCount(currentUserUid, (count) => {
       setUnreadCount(count);
     });
 
@@ -29,37 +22,45 @@ function Header({ wishlistCount, currentUserUid }) {
 
   return (
     <>
-    <a href="tel:+37443654777">Զանգահարել մեզ</a>
-      <div className="flex flex-col lg:flex-row lg:gap-70 p-4 lg:p-6 items-center lg:items-start justify-between">
-        <img
-          className="mb-4 lg:mb-0"
-          src="https://www.stonemarket.am/icons/logo-primary.svg"
-          alt="logo"
-        />
+      <div className="bg-gray-800 text-white text-center py-1 text-xs">
+        <a href="tel:+37443654777" className="hover:underline">Զանգահարել մեզ: +374 43 654 777</a>
+      </div>
+
+      <div className="flex flex-col lg:flex-row p-4 lg:p-6 items-center justify-between bg-white shadow-sm sticky top-0 z-50">
+        <Link to="/">
+          <img
+            className="mb-4 lg:mb-0 h-10"
+            src="https://www.stonemarket.am/icons/logo-primary.svg"
+            alt="logo"
+          />
+        </Link>
 
         <div className="flex flex-wrap justify-center gap-4 lg:gap-8 mb-4 lg:mb-0">
-          <Link to="/" className="font-GHEAGrpalatReg font-bold">Գլխավոր</Link>
-          <Link to="/xanut" className="font-GHEAGrpalatReg font-bold">Խանութ</Link>
-          <Link to="/design" className="font-GHEAGrpalatReg font-bold">Դիզայներներ</Link>
-          <Link to="/mermasin" className="font-GHEAGrpalatReg font-bold">Մեր մասին</Link>
-          <Link to="/kap" className="font-GHEAGrpalatReg font-bold">Կապ</Link>
-          <Link to="/chat" className="relative font-GHEAGrpalatReg font-bold text-blue-500">
-            Chat
+          <Link to="/" className="font-bold text-gray-700 hover:text-indigo-600">Գլխավոր</Link>
+          <Link to="/xanut" className="font-bold text-gray-700 hover:text-indigo-600">Խանութ</Link>
+          <Link to="/design" className="font-bold text-gray-700 hover:text-indigo-600">Դիզայներներ</Link>
+          <Link to="/mermasin" className="font-bold text-gray-700 hover:text-indigo-600">Մեր մասին</Link>
+          <Link to="/kap" className="font-bold text-gray-700 hover:text-indigo-600">Կապ</Link>
+          
+          {/* CHAT NOTIFICATION */}
+          <Link to="/chat" className="relative font-bold text-indigo-600 flex items-center">
+            Չատ
             {unreadCount > 0 && (
-              <span className="absolute -top-3 -right-4 bg-red-600 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">
-                {unreadCount}
+              <span className="absolute -top-2 -right-4 bg-red-600 text-white text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center border-2 border-white animate-bounce">
+                {unreadCount > 9 ? "9+" : unreadCount}
               </span>
             )}
           </Link>
         </div>
 
         <div className="flex gap-4 lg:gap-6 items-center">
-          <i className="fa fa-search cursor-pointer"></i>
+          <i className="fa fa-search cursor-pointer text-gray-600 hover:text-black"></i>
           
           <Link to="/login">
-             <i className="fa fa-sign-out cursor-pointer"></i>
+             <i className="fa fa-user-circle cursor-pointer text-gray-600 hover:text-black"></i>
           </Link>
 
+          {/* WISHLIST NOTIFICATION */}
           <Link to="/like" className="relative">
             <i className="fa fa-heart text-xl text-red-500"></i>
             {wishlistCount > 0 && (
@@ -69,10 +70,12 @@ function Header({ wishlistCount, currentUserUid }) {
             )}
           </Link>
 
-          <i className="fa fa-shopping-cart cursor-pointer"></i>
+          <div className="relative cursor-pointer group">
+            <i className="fa fa-shopping-cart text-gray-600 group-hover:text-black"></i>
+          </div>
 
           <img
-            className="h-[16px] w-[16px]"
+            className="h-4 w-6 rounded-sm shadow-sm cursor-pointer"
             src="https://www.stonemarket.am/icons/hy.svg"
             alt="lang"
           />
