@@ -1,12 +1,17 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+// Layout Components
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
+
+// Feature Components
 import Chat from "./components/Chat.jsx";
 import Login from "./components/Login.jsx";
-import UserProfile from "./pages/UserProfile.jsx"; 
+import VideoCall from "./components/VideoCall.jsx"; // Ավելացրինք սա
 
+// Pages
+import UserProfile from "./pages/UserProfile.jsx"; 
 import Home from "./pages/Home.jsx";
 import Design from "./pages/Design.jsx";
 import Dizayner from "./pages/Dizayner.jsx";
@@ -16,6 +21,7 @@ import Mermasin from "./pages/Mermasin.jsx";
 import Xanut from "./pages/Xanut.jsx";
 import Project from "./designs/Project.jsx";
 
+// Firebase & Presence
 import { observeAuth } from "./firebase/auth";
 import { setupPresence } from "./firebase/presence";
 
@@ -24,6 +30,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [wishlist, setWishlist] = useState([]);
 
+  // Wishlist Logic
   const handleLike = (product) => {
     setWishlist((prev) => {
       const exists = prev.find((p) => p.name === product.name);
@@ -33,6 +40,7 @@ function App() {
     });
   };
 
+  // Auth Observer
   useEffect(() => {
     const unsub = observeAuth((u) => {
       setUser(u);
@@ -46,14 +54,21 @@ function App() {
     return () => unsub();
   }, []);
 
-  if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen font-bold text-indigo-600">
+        Բեռնվում է...
+      </div>
+    );
+  }
 
   return (
     <>
+      {/* Header-ին փոխանցում ենք wishlist-ի քանակը */}
       <Header wishlistCount={wishlist.length} />
 
       <Routes>
-        {/* Հանրային էջեր */}
+        {/* --- ՀԱՆՐԱՅԻՆ ԷՋԵՐ --- */}
         <Route path="/" element={<Home />} />
         <Route path="/design" element={<Design />} />
         <Route path="/dizayner" element={<Dizayner />} />
@@ -63,30 +78,39 @@ function App() {
         <Route path="/like" element={<Like wishlist={wishlist} />} />
         <Route path="/project/:id" element={<Project />} />
 
-        {/* Օգտատիրոջ պրոֆիլի էջ */}
-        <Route path="/profile/:uid" element={user ? <UserProfile /> : <Navigate to="/login" />} />
-
-        {/* AUTH */}
-        <Route
-          path="/login"
-          element={!user ? <Login /> : <Navigate to="/chat" />}
+        {/* --- ՊԱՇՏՊԱՆՎԱԾ ԷՋԵՐ (Միայն մուտք գործածների համար) --- */}
+        
+        {/* Օգտատիրոջ պրոֆիլ */}
+        <Route 
+          path="/profile/:uid" 
+          element={user ? <UserProfile /> : <Navigate to="/login" />} 
         />
 
-        {/* --- ԿԱՐԵՎՈՐ ՓՈՓՈԽՈՒԹՅՈՒՆՆԵՐԸ ԱՅՍՏԵՂ --- */}
-        
-        {/* Ընդհանուր չատ (Main Chat) */}
+        {/* Չատի հիմնական էջ */}
         <Route
           path="/chat"
           element={user ? <Chat user={user} /> : <Navigate to="/login" />}
         />
 
-        {/* Անձնական չատ կոնկրետ մարդու հետ (Private Chat) */}
+        {/* Անձնական չատ կոնկրետ մարդու հետ */}
         <Route
           path="/chat/:chatId"
           element={user ? <Chat user={user} /> : <Navigate to="/login" />}
         />
 
-        {/* Եթե URL-ը սխալ է */}
+        {/* ՎԻԴԵՈԶԱՆԳԻ ԷՋ */}
+        <Route 
+          path="/video-call/:roomId" 
+          element={user ? <VideoCall /> : <Navigate to="/login" />} 
+        />
+
+        {/* --- AUTH --- */}
+        <Route
+          path="/login"
+          element={!user ? <Login /> : <Navigate to="/chat" />}
+        />
+
+        {/* Եթե URL-ը սխալ է, ուղարկում ենք կամ չատ, կամ լոգին */}
         <Route
           path="*"
           element={<Navigate to={user ? "/chat" : "/login"} />}
