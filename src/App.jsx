@@ -1,16 +1,17 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-// Layout Components
+
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
 
-// Feature Components
+
 import Chat from "./components/Chat.jsx";
 import Login from "./components/Login.jsx";
-import VideoCall from "./components/VideoCall.jsx"; // Ավելացրինք սա
+import VideoCall from "./components/VideoCall.jsx";
+import Stories from "./components/Stories.jsx"; // <--- Ավելացրինք Stories-ը
 
-// Pages
+
 import UserProfile from "./pages/UserProfile.jsx"; 
 import Home from "./pages/Home.jsx";
 import Design from "./pages/Design.jsx";
@@ -67,6 +68,9 @@ function App() {
       {/* Header-ին փոխանցում ենք wishlist-ի քանակը */}
       <Header wishlistCount={wishlist.length} />
 
+      {/* Stories-ը տեղադրում ենք այստեղ, որպեսզի այն միշտ լինի վերևում */}
+      <Stories />
+
       <Routes>
         {/* --- ՀԱՆՐԱՅԻՆ ԷՋԵՐ --- */}
         <Route path="/" element={<Home />} />
@@ -78,27 +82,19 @@ function App() {
         <Route path="/like" element={<Like wishlist={wishlist} />} />
         <Route path="/project/:id" element={<Project />} />
 
-        {/* --- ՊԱՇՏՊԱՆՎԱԾ ԷՋԵՐ (Միայն մուտք գործածների համար) --- */}
-        
-        {/* Օգտատիրոջ պրոֆիլ */}
+        {/* --- ՊԱՇՏՊԱՆՎԱԾ ԷՋԵՐ --- */}
         <Route 
           path="/profile/:uid" 
           element={user ? <UserProfile /> : <Navigate to="/login" />} 
         />
-
-        {/* Չատի հիմնական էջ */}
         <Route
           path="/chat"
           element={user ? <Chat user={user} /> : <Navigate to="/login" />}
         />
-
-        {/* Անձնական չատ կոնկրետ մարդու հետ */}
         <Route
           path="/chat/:chatId"
           element={user ? <Chat user={user} /> : <Navigate to="/login" />}
         />
-
-        {/* ՎԻԴԵՈԶԱՆԳԻ ԷՋ */}
         <Route 
           path="/video-call/:roomId" 
           element={user ? <VideoCall /> : <Navigate to="/login" />} 
@@ -110,7 +106,6 @@ function App() {
           element={!user ? <Login /> : <Navigate to="/chat" />}
         />
 
-        {/* Եթե URL-ը սխալ է, ուղարկում ենք կամ չատ, կամ լոգին */}
         <Route
           path="*"
           element={<Navigate to={user ? "/chat" : "/login"} />}

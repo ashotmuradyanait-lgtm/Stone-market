@@ -16,24 +16,26 @@ import {
   where,
   deleteDoc,
   collectionGroup, 
+  writeBatch,
   serverTimestamp as firestoreTimestamp 
 } from "firebase/firestore";
 import { db, rtdb } from "./config"; 
 
-// 1. --- ՉԱՏԻ ՀԻՄՆԱԿԱՆ ID (Միշտ նույնը երկուսի համար) ---
+// 1. --- ՉԱՏԻ ID ՍՏԵՂԾՈՒՄ ---
 export const getChatId = (uid1, uid2) => {
   if (!uid1 || !uid2) return null;
   return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`;
 };
 
-// 2. --- ՆԱՄԱԿՆԵՐԻ ՏՐԱՄԱԲԱՆՈՒԹՅՈՒՆ ---
-export const sendMessage = async (chatId, { text, userId, email }) => {
-  if (!chatId || !text) return;
+// 2. --- ՆԱՄԱԿՆԵՐԻ ՈՒՂԱՐԿՈՒՄ ԵՎ ԼՍՈՒՄ ---
+export const sendMessage = async (chatId, { text, userId, email, type = "text" }) => {
+  if (!chatId || (!text && type === "text")) return;
   try {
     await addDoc(collection(db, "chats", chatId, "messages"), {
-      text,
+      text: text || "",
       userId,
       email,
+      type, // Ավելացրել ենք type (text, audio, video)
       read: false,
       createdAt: firestoreTimestamp(), 
     });
@@ -42,7 +44,7 @@ export const sendMessage = async (chatId, { text, userId, email }) => {
   }
 };
 
-export const listenMessages = (chatId, userId, callback) => {
+export const listenMessages = (chatId, callback) => {
   if (!chatId) return;
   const q = query(
     collection(db, "chats", chatId, "messages"),
@@ -54,33 +56,51 @@ export const listenMessages = (chatId, userId, callback) => {
   });
 };
 
-// 3. --- ԿԱՐԵՎՈՐ. HEADER-Ի ՀԱՄԱՐ (Չընթերցված նամակներ) ---
+// 3. --- ՉԿԱՐԴԱՑՎԱԾ ՆԱՄԱԿՆԵՐԻ ԼՍՈՒՄ (Օպտիմալացված) ---
 export const listenUnreadCount = (userId, callback) => {
   if (!userId) return;
-  // Սա լսում է ԲՈԼՈՐ չատերի չկարդացած նամակները
-  const q = query(collectionGroup(db, "messages"), where("read", "==", false));
+  
+  // Լսում ենք բոլոր "messages" ենթահավաքածուները, որտեղ read-ը false է
+  const q = query(
+    collectionGroup(db, "messages"), 
+    where("read", "==", false)
+  );
 
   return onSnapshot(q, (snapshot) => {
-    const unread = snapshot.docs.filter(docSnap => {
+    // Ֆիլտրում ենք այն նամակները, որոնք իմը չեն ԵՎ պատկանում են իմ չատերին
+    const unreadCount = snapshot.docs.filter(docSnap => {
       const data = docSnap.data();
-      // Եթե նամակը իմը չի ու գտնվում է իմ chatId-ի մեջ
-      return data.userId !== userId && docSnap.ref.path.includes(userId);
-    });
-    callback(unread.length);
+      const path = docSnap.ref.path;
+      // Ստուգում ենք, որ նամակը ուրիշինն է և chatId-ի մեջ կա իմ ID-ն
+      return data.userId !== userId && path.includes(userId);
+    }).length;
+    
+    callback(unreadCount);
   });
 };
 
+// 4. --- ՆԱՄԱԿՆԵՐԸ ԿԱՐԴԱՑՎԱԾ ՆՇԵԼ (Օգտագործելով Batch) ---
 export const markAsRead = async (chatId, messages, userId) => {
   if (!chatId || !messages.length) return;
+  
   const unreadMessages = messages.filter(msg => msg.userId !== userId && !msg.read);
-  const promises = unreadMessages.map(msg => {
+  if (unreadMessages.length === 0) return;
+
+  const batch = writeBatch(db); // Batch-ը ավելի արագ է, քան Promise.all-ը սովորական update-ի համար
+  
+  unreadMessages.forEach(msg => {
     const msgRef = doc(db, "chats", chatId, "messages", msg.id);
-    return updateDoc(msgRef, { read: true });
+    batch.update(msgRef, { read: true });
   });
-  await Promise.all(promises).catch(e => console.error("MarkAsRead Error:", e));
+
+  try {
+    await batch.commit();
+  } catch (e) {
+    console.error("MarkAsRead Batch Error:", e);
+  }
 };
 
-// 4. --- ՎԻԴԵՈԶԱՆԳԻ ՕԺԱՆԴԱԿՈՒԹՅՈՒՆ ---
+// 5. --- ԶԱՆԳԵՐԻ ԿԱՐԳԱՎՈՐՈՒՄ ---
 export const updateCallStatus = async (callId, status) => {
   if (!callId) return;
   try {
@@ -90,16 +110,7 @@ export const updateCallStatus = async (callId, status) => {
   }
 };
 
-export const clearCall = async (callId) => {
-  if (!callId) return;
-  try {
-    await deleteDoc(doc(db, "calls", callId));
-  } catch (e) {
-    console.error("ClearCall Error:", e);
-  }
-};
-
-// 5. --- ՍՏԱՏՈՒՍՆԵՐ (ONLINE/OFFLINE) ---
+// 6. --- ONLINE/OFFLINE ՍՏԱՏՈՒՍ ---
 export const updateUserStatus = (uid, email) => {
   if (!uid) return;
   const statusRef = ref(rtdb, `status/${uid}`);
@@ -107,30 +118,21 @@ export const updateUserStatus = (uid, email) => {
 
   onValue(connectedRef, (snapshot) => {
     if (snapshot.val() === false) return;
+
+    // Երբ օգտատերը անջատվում է
     onDisconnect(statusRef).set({
       state: "offline",
       last_changed: rtdbTimestamp(),
-      email: email,
+      email,
       id: uid
     });
+
+    // Երբ օգտատերը միանում է
     set(statusRef, {
       state: "online",
       last_changed: rtdbTimestamp(),
-      email: email,
+      email,
       id: uid
     });
-  });
-};
-
-export const listenAllStatuses = (callback) => {
-  const statusRef = ref(rtdb, `status`);
-  return onValue(statusRef, (snapshot) => {
-    const data = snapshot.val();
-    if (data) {
-      const list = Object.keys(data).map(key => ({ ...data[key], id: key }));
-      callback(list);
-    } else {
-      callback([]);
-    }
   });
 };
