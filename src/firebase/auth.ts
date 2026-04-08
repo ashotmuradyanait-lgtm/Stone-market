@@ -4,19 +4,24 @@ import {
   signOut,
   onAuthStateChanged,
   updateProfile,
+  User,
+  UserCredential
 } from "firebase/auth";
 
 import { ref, update } from "firebase/database";
-import { auth, db } from "./config"; // Ներմուծում ենք db-ն անմիջապես config-ից
+import { auth, rtdb } from "./config"; 
 
-const syncUserStatus = async (user, displayName = null) => {
-  // Օգտագործում ենք արդեն գոյություն ունեցող db-ն
-  const statusRef = ref(db, `status/${user.uid}`);
+/**
+ * Օգտատիրոջ ստատուսի սինխրոնացում Realtime Database-ի հետ
+ */
+const syncUserStatus = async (user: User, displayName: string | null = null): Promise<void> => {
+ const statusRef = ref(rtdb, `status/${user.uid}`);
 
+  // Սահմանում ենք տվյալների կառուցվածքը
   const data = {
     id: user.uid,
     email: user.email,
-    displayName: displayName || user.displayName || user.email.split('@')[0],
+    displayName: displayName || user.displayName || user.email?.split('@')[0] || "Unknown",
     state: "online",
     last_changed: Date.now(),
   };
@@ -24,7 +29,10 @@ const syncUserStatus = async (user, displayName = null) => {
   return update(statusRef, data);
 };
 
-export const register = async (email, password, displayName) => {
+/**
+ * Գրանցում
+ */
+export const register = async (email: string, password: string, displayName: string): Promise<UserCredential> => {
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     
@@ -40,7 +48,10 @@ export const register = async (email, password, displayName) => {
   }
 };
 
-export const login = async (email, password) => {
+/**
+ * Մուտք
+ */
+export const login = async (email: string, password: string): Promise<UserCredential> => {
   try {
     const res = await signInWithEmailAndPassword(auth, email, password);
     
@@ -53,6 +64,13 @@ export const login = async (email, password) => {
   }
 };
 
-export const logout = () => signOut(auth);
+/**
+ * Ելք
+ */
+export const logout = (): Promise<void> => signOut(auth);
 
-export const observeAuth = (cb) => onAuthStateChanged(auth, cb);
+/**
+ * Օգտատիրոջ վիճակի հետևում
+ */
+export const observeAuth = (cb: (user: User | null) => void) => 
+  onAuthStateChanged(auth, cb);

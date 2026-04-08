@@ -1,12 +1,12 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { login, register } from "../firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -14,11 +14,11 @@ export default function Login() {
     try {
       setLoading(true);
       setError("");
-
       await login(email, password);
       navigate("/chat");
-    } catch (err) {
-      setError(err.message);
+    } catch (err: any) {
+      // Firebase-ի սխալները սովորաբար ունենում են message դաշտ
+      setError(err.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -28,11 +28,10 @@ export default function Login() {
     try {
       setLoading(true);
       setError("");
-
-      await register(email, password);
+     await register(email, password, ""); // Ավելացրինք "" որպես displayName
       navigate("/chat");
-    } catch (err) {
-      setError(err.message);
+    } catch (err: any) {
+      setError(err.message || "Registration failed");
     } finally {
       setLoading(false);
     }
@@ -47,8 +46,9 @@ export default function Login() {
         <input
           style={styles.input}
           placeholder="Email"
+          type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
         />
 
         <input
@@ -56,16 +56,24 @@ export default function Login() {
           placeholder="Password"
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
         />
 
         {error && <p style={styles.error}>{error}</p>}
 
-        <button style={styles.loginBtn} onClick={handleLogin} disabled={loading}>
+        <button 
+          style={styles.loginBtn} 
+          onClick={handleLogin} 
+          disabled={loading}
+        >
           {loading ? "Loading..." : "Login"}
         </button>
 
-        <button style={styles.registerBtn} onClick={handleRegister} disabled={loading}>
+        <button 
+          style={styles.registerBtn} 
+          onClick={handleRegister} 
+          disabled={loading}
+        >
           {loading ? "Loading..." : "Register"}
         </button>
       </div>
@@ -73,7 +81,8 @@ export default function Login() {
   );
 }
 
-const styles = {
+// Սահմանում ենք ստայլերի տիպը, որպեսզի TypeScript-ը հասկանա CSS հատկությունները
+const styles: { [key: string]: React.CSSProperties } = {
   wrapper: {
     height: "100vh",
     display: "flex",
@@ -82,26 +91,22 @@ const styles = {
     background: "linear-gradient(135deg, #667eea, #764ba2)",
     fontFamily: "sans-serif",
   },
-
   card: {
     width: "320px",
     padding: "30px",
     borderRadius: "16px",
     background: "white",
     boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-    textAlign: "center",
+    textAlign: "center" as const, // TS-ի համար պետք է հստակեցնել
   },
-
   title: {
     marginBottom: "5px",
   },
-
   subtitle: {
     fontSize: "12px",
     color: "#666",
     marginBottom: "20px",
   },
-
   input: {
     width: "100%",
     padding: "10px",
@@ -109,8 +114,8 @@ const styles = {
     borderRadius: "8px",
     border: "1px solid #ddd",
     outline: "none",
+    boxSizing: "border-box", // Որպեսզի padding-ը չմեծացնի input-ը
   },
-
   loginBtn: {
     width: "100%",
     padding: "10px",
@@ -121,7 +126,6 @@ const styles = {
     cursor: "pointer",
     marginBottom: "10px",
   },
-
   registerBtn: {
     width: "100%",
     padding: "10px",
@@ -131,7 +135,6 @@ const styles = {
     borderRadius: "8px",
     cursor: "pointer",
   },
-
   error: {
     color: "red",
     fontSize: "12px",

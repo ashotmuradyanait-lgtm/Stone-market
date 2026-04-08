@@ -1,0 +1,116 @@
+import React from "react";
+
+// TypeScript-ում React կոմպոնենտները սահմանվում են որպես React.FC (Functional Component)
+const Footer: React.FC = () => {
+  return (
+    <>
+      <div className="bg-gray-900 min-h-screen w-full p-4 lg:p-10">
+        <div className="flex flex-col lg:flex-row gap-6 items-center justify-center">
+          <div className="border border-white w-full lg:w-[500px] rounded-lg p-6">
+            <p className="text-white font-bold text-2xl mb-2">Հետադարձ կապ</p>
+
+            <p className="text-white text-sm mb-4">
+              Լրացրեք տվյալները և մենք կկապնվենք Ձեզ հետ հնարավորինս շուտ։
+            </p>
+
+            <div className="flex flex-col gap-3">
+              <input 
+                className="text-white bg-gray-800 w-full h-[35px] rounded-lg px-2" 
+                type="text" 
+                placeholder="Անուն" 
+              />
+              <input 
+                className="text-white bg-gray-800 w-full h-[35px] rounded-lg px-2" 
+                type="text" 
+                placeholder="Էլ․հասցե" 
+              />
+              <input 
+                className="text-white bg-gray-800 w-full h-[35px] rounded-lg px-2" 
+                type="number" 
+                placeholder="+374" 
+              />
+              <input 
+                className="text-white bg-gray-800 w-full h-[35px] rounded-lg px-2" 
+                type="text" 
+                placeholder="Կազմակերպություն" 
+              />
+            </div>
+
+            <div className="flex items-center gap-2 mt-4">
+              <input type="checkbox" id="terms" />
+              <label htmlFor="terms" className="text-white text-sm">
+                Համաձայն եմ կայքի պայմաններին
+              </label>
+            </div>
+
+            <div className="flex justify-center mt-6">
+              <button className="text-white bg-green-400 h-[40px] w-[120px] rounded-lg hover:bg-green-600 transition-colors">
+                Ուղարկել
+              </button>
+            </div>
+          </div>
+
+          <img
+            className="w-full lg:w-[900px] h-[300px] lg:h-[400px] object-cover rounded-lg"
+            src="https://www.stonemarket.am/_next/image?url=%2Fimages%2Ffeedback.webp&w=1920&q=75"
+            alt="Feedback background"
+          />
+        </div>
+
+        <div className="border-t border-white mt-10"></div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10 p-6">
+          <div>
+            <img className="mb-4" src="https://www.stonemarket.am/icons/logo-light.svg" alt="Stone Market Logo" />
+            <p className="text-white">+374 (33) 76 - 73 - 77</p>
+            <p className="text-white text-sm">sstonemarket@yandex.ru</p>
+          </div>
+
+          <div className="text-white text-sm space-y-2">
+            <p className="cursor-pointer hover:text-gray-300">Գլխավոր</p>
+            <p className="cursor-pointer hover:text-gray-300">Խանութ</p>
+            <p className="cursor-pointer hover:text-gray-300">Դիզայներներ</p>
+            <p className="cursor-pointer hover:text-gray-300">Մեր մասին</p>
+            <p className="cursor-pointer hover:text-gray-300">Կապ</p>
+            <p className="cursor-pointer hover:text-gray-300">Գաղտնիության քաղաքականություն</p>
+            <p className="cursor-pointer hover:text-gray-300">Ընդհանուր դրույթներ և պայմաններ</p>
+            <p className="cursor-pointer hover:text-gray-300">Հաշվի ջնջում</p>
+          </div>
+
+          <div className="text-white text-sm space-y-2">
+            <p className="font-bold mb-2">Ծառայություններ</p>
+            <p>Արտադրական ցիկլի աուդիտ</p>
+            <p>Հանքաքարի շահագործման ծառայություն</p>
+            <p>Ֆոտո/վիդեո բռենդ փաթեթավորում</p>
+            <p>Export-ի կազմակերպում</p>
+            <p>Բեռնափոխադրում</p>
+          </div>
+
+          <div className="text-white text-sm space-y-2">
+            <p>Հետևե՜ք մեզ սոցցանցերում</p>
+            <div className="flex gap-2 items-center">
+              <img src="https://www.stonemarket.am/icons/instagram.svg" alt="Instagram" />
+              <p>stonemarket.am</p>
+            </div>
+            <div className="flex gap-2 items-center">
+              <img src="https://www.stonemarket.am/icons/facebook-white.svg" alt="Facebook" />
+              <p>Stone Market</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4 pb-10">
+          <p className="text-white text-sm">Ներբեռնեք մեր հավելվածը</p>
+          <a href="https://apps.apple.com/am/app/stone-market-platform/id6453761130" target="_blank" rel="noreferrer">
+            <img src="https://www.stonemarket.am/icons/app-store.svg" alt="App Store" />
+          </a>
+          <a href="https://play.google.com/store/apps/details?id=com.petro_stone.stone_market" target="_blank" rel="noreferrer">
+            <img src="https://www.stonemarket.am/icons/google-play.svg" alt="Google Play" />
+          </a>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Footer;

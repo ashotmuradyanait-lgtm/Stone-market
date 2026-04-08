@@ -3,15 +3,20 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 
 export default function VideoCall() {
-  const { roomId } = useParams();
+  // 1. Տիպավորում ենք roomId-ն որպես string
+  const { roomId } = useParams<{ roomId: string }>();
   const navigate = useNavigate();
-  const containerRef = useRef(null);
+  
+  // 2. Տիպավորում ենք ref-ը HTMLDivElement-ի համար
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const myMeeting = async () => {
-      // ՍԱ ԿԱՐԵՎՈՐ Է. Տեղադրիր քո իրական AppID-ն և ServerSecret-ը ZegoCloud-ից
-      const appID = 123456789; // Փոխիր սա
-      const serverSecret = "քո_իրական_server_secret_կոդը"; // Փոխիր սա
+      // ՍԱ ԿԱՐԵՎՈՐ Է. Տեղադրիր քո իրական AppID-ն և ServerSecret-ը
+      const appID: number = 123456789; 
+      const serverSecret: string = "քո_իրական_server_secret_կոդը";
+
+      if (!roomId) return;
 
       const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
         appID,
@@ -23,24 +28,24 @@ export default function VideoCall() {
 
       const zp = ZegoUIKitPrebuilt.create(kitToken);
 
-      zp.joinRoom({
-        container: containerRef.current,
-        scenario: {
-          mode: ZegoUIKitPrebuilt.OneONoneCall,
-        },
-        showScreenSharingButton: true,
-        onLeaveRoom: () => {
-          // Երբ օգտատերը դուրս է գալիս զանգից, վերադառնում է չատ
-          navigate('/chat');
-        },
-      });
+      if (containerRef.current) {
+        zp.joinRoom({
+          container: containerRef.current,
+          scenario: {
+            mode: ZegoUIKitPrebuilt.OneONoneCall,
+          },
+          showScreenSharingButton: true,
+          onLeaveRoom: () => {
+            navigate('/chat');
+          },
+        });
+      }
     };
 
     if (containerRef.current) {
       myMeeting();
     }
 
-    // Մաքրման ֆունկցիա (cleanup), երբ էջը փակվում է
     return () => {
       if (containerRef.current) {
         containerRef.current.innerHTML = "";

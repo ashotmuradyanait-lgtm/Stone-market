@@ -2,30 +2,46 @@ import React, { useState, useEffect, useRef } from 'react';
 import { db, auth } from '../firebase/config';
 import { collection, query, onSnapshot, serverTimestamp, addDoc } from 'firebase/firestore';
 
+// 1. Սահմանում ենք Story-ի ինտերֆեյսը
+interface IStory {
+  id: string;
+  contentUrl: string;
+  type: "video" | "image";
+  userEmail: string;
+  createdAt: any; // Firestore Timestamp
+}
+
 export default function Stories() {
-  const [stories, setStories] = useState([]);
-  const [selectedStory, setSelectedStory] = useState(null);
-  const [isRecording, setIsRecording] = useState(false);
-  const [recordingTime, setRecordingTime] = useState(0);
+  const [stories, setStories] = useState<IStory[]>([]);
+  const [selectedStory, setSelectedStory] = useState<IStory | null>(null);
+  const [isRecording, setIsRecording] = useState<boolean>(false);
+  const [recordingTime, setRecordingTime] = useState<number>(0);
   
-  const videoRef = useRef(null);
-  const mediaRecorderRef = useRef(null);
-  const chunksRef = useRef([]);
-  const timerRef = useRef(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  
+  // Ուղղում 1: Տիպավորում ենք timer-ը այնպես, որ Browser-ի և Node-ի միջև կոնֆլիկտ չլինի
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    // Պարզ հարցում, որպեսզի Index-ի սխալ չտա
     const q = query(collection(db, "stories"));
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const twentyFourHoursAgo = Date.now() - 24 * 60 * 60 * 1000;
       
       const docs = snapshot.docs
-        .map(doc => ({ id: doc.id, ...doc.data() }))
-        // Ֆիլտրում ենք 24 ժամը հենց այստեղ
-        .filter(story => story.createdAt?.toMillis() > twentyFourHoursAgo)
-        // Դասավորում ենք՝ նորերը սկզբում
-        .sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
+        .map(doc => ({ id: doc.id, ...doc.data() } as IStory))
+        .filter(story => {
+            // Ստուգում ենք, որ createdAt-ը գոյություն ունի և 24 ժամվա մեջ է
+            const time = story.createdAt?.toMillis ? story.createdAt.toMillis() : 0;
+            return time > twentyFourHoursAgo;
+        })
+        .sort((a, b) => {
+            const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+            const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+            return timeB - timeA;
+        });
 
       setStories(docs);
     });
@@ -50,15 +66,15 @@ export default function Stories() {
       setIsRecording(true);
       setRecordingTime(0);
 
+      // Ուղղում 2: Օգտագործում ենք window.setInterval կամ ուղղակի տիպավորված Ref-ը
       timerRef.current = setInterval(() => {
         setRecordingTime(prev => prev + 1);
       }, 1000);
       
-      // Օգտագործում ենք ստանդարտ format, որ բոլոր սարքերը հասկանան
       mediaRecorderRef.current = new MediaRecorder(stream);
       chunksRef.current = [];
 
-      mediaRecorderRef.current.ondataavailable = (e) => {
+      mediaRecorderRef.current.ondataavailable = (e: BlobEvent) => {
         if (e.data.size > 0) chunksRef.current.push(e.data);
       };
       
@@ -69,7 +85,7 @@ export default function Stories() {
         reader.onloadend = async () => {
           try {
             await addDoc(collection(db, "stories"), {
-              contentUrl: reader.result,
+              contentUrl: reader.result as string,
               type: "video",
               userEmail: auth.currentUser?.email || "Անանուն",
               createdAt: serverTimestamp()
@@ -78,7 +94,6 @@ export default function Stories() {
             console.error("Firestore Upload Error:", err);
           }
           
-          // Անջատում ենք տեսախցիկը
           stream.getTracks().forEach(track => track.stop());
           setIsRecording(false);
         };
@@ -92,7 +107,10 @@ export default function Stories() {
   };
 
   const stopRecording = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
+    if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+    }
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
       mediaRecorderRef.current.stop();
     }
@@ -130,7 +148,7 @@ export default function Stories() {
                </div>
             </div>
             <span className="text-[10px] font-medium text-gray-500 truncate w-16 text-center">
-              {story.userEmail?.split('@')[0]}
+              {story.userEmail ? story.userEmail.split('@')[0] : 'User'}
             </span>
           </div>
         ))}
@@ -164,8 +182,8 @@ export default function Stories() {
       {selectedStory && (
         <div className="fixed inset-0 z-[7000] bg-black flex items-center justify-center" onClick={() => setSelectedStory(null)}>
            <div className="absolute top-6 left-6 flex items-center gap-3 z-[7001]">
-              <div className="w-10 h-10 rounded-full bg-blue-500 border-2 border-white flex items-center justify-center text-white font-bold">
-                {selectedStory.userEmail[0].toUpperCase()}
+              <div className="w-10 h-10 rounded-full bg-blue-500 border-2 border-white flex items-center justify-center text-white font-bold text-xs">
+                {selectedStory.userEmail ? selectedStory.userEmail[0].toUpperCase() : '?'}
               </div>
               <span className="text-white font-bold shadow-md">{selectedStory.userEmail?.split('@')[0]}</span>
            </div>

@@ -1,8 +1,23 @@
 import { Link } from 'react-router-dom';
 import React from 'react';
 
-function Xanut({ onLike, wishlist = [] }) {
-    const products = [
+// 1. Սահմանում և export ենք անում Product տիպը, որպեսզի App.tsx-ն էլ տեսնի սա
+export interface Product {
+    name: string;
+    price: string; // Եթե App.tsx-ում price-ը string | number է, դիր այդպես
+    img: string;
+    desc: string;
+}
+
+// 2. Սահմանում ենք Props-ների տիպերը
+interface XanutProps {
+    onLike: (product: Product) => void;
+    wishlist: Product[];
+}
+
+const Xanut: React.FC<XanutProps> = ({ onLike, wishlist = [] }) => {
+    // Ապրանքների ցուցակը
+    const products: Product[] = [
         { name: "Բետոնե Սեղան N073", price: "600,000Դր.", img: "https://api.stonemarket.am/%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N073-1--1772700511503.webp", desc: "Սեղան բետոնից՝ յուրահատուկ և արտահայտիչ դիզայնով։" },
         { name: "Տրավերտինե հավաքածու N097", price: "2,500,000Դր.", img: "https://api.stonemarket.am/%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N097--1772606804540.webp", desc: "Սեղան և նստարաններ բնական տրավերտին քարից։" },
         { name: "Տրավերտինե հավաքածու N093", price: "350,000Դր.", img: "https://api.stonemarket.am/%C3%94%C2%BF%C3%95%C2%88%C3%94%C2%B4_N093--1772606461964.webp", desc: "Արտահայտիչ կառուցվածքը համադրում է բնականը։" },
@@ -30,64 +45,68 @@ function Xanut({ onLike, wishlist = [] }) {
 
     return (
         <div className="bg-gray-100 min-h-screen pb-20">
+            {/* Breadcrumbs */}
             <div className="flex px-14 gap-2 pt-4 items-center">
-                <p className="text-gray-500 text-[14px]">Գլխավոր</p>
-                <img src="https://www.stonemarket.am/icons/arrow-right-black.svg" className="h-3" alt="" />
+                <Link to="/" className="text-gray-500 text-[14px] hover:text-green-600 transition-colors">Գլխավոր</Link>
+                <img src="https://www.stonemarket.am/icons/arrow-right-black.svg" className="h-3" alt="arrow" />
                 <p className="text-gray-700 text-[14px]">Խանութ</p>
             </div>
 
-            <div className="px-14 p-8 flex gap-2 flex-wrap">
-                <p className="font-semibold">Կատեգորիա:</p>
-                {["Բնական քար", "Արհեստական քար", "Հաստոցներ","Քարամշակման պարագաներ", "Քիմիական նյութեր","Արտադրական ծառայություններ","Mane Tiles"].map((cat) => (
-                    <p key={cat} className="border border-gray-300 rounded-lg px-4 py-1 text-center hover:border-green-500 cursor-pointer bg-white transition-all shadow-sm">
+            {/* Categories */}
+            <div className="px-14 p-8 flex gap-2 flex-wrap items-center">
+                <p className="font-semibold text-gray-700 mr-2">Կատեգորիա:</p>
+                {["Բնական քար", "Արհեստական քար", "Հաստոցներ", "Քարամշակման պարագաներ", "Քիմիական նյութեր", "Արտադրական ծառայություններ", "Mane Tiles"].map((cat) => (
+                    <p key={cat} className="border border-gray-300 rounded-lg px-4 py-1 text-center hover:border-green-500 hover:text-green-600 cursor-pointer bg-white transition-all shadow-sm text-sm">
                         {cat}
                     </p>
                 ))}
             </div>
 
-            <div className="flex flex-wrap gap-6 px-14 justify-center">
+            {/* Product Grid */}
+            <div className="flex flex-wrap gap-6 px-14 justify-center max-w-[1400px] mx-auto">
                 {products.map((item, index) => {
                     const isLiked = wishlist.some(fav => fav.name === item.name);
 
                     return (
                         <div key={index}
-                             className="bg-white h-[380px] w-[300px] rounded-[20px] shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
-                            <div className="relative h-[220px] p-2">
-                            <Link to={`/project/${index}`}>
+                             className="bg-white h-[380px] w-[280px] rounded-[20px] shadow-sm hover:shadow-xl transition-all relative overflow-hidden group">
+                            <div className="relative h-[220px] p-2 overflow-hidden">
+                                <Link to={`/project/${index}`}>
+                                    <img 
+                                        className="h-full w-full object-contain rounded-t-lg transition-transform duration-300 group-hover:scale-110" 
+                                        src={`https://www.stonemarket.am/_next/image?url=${encodeURIComponent(item.img)}&w=1920&q=75`} 
+                                        alt={item.name} 
+                                    />
+                                </Link>
                                 <img 
-                                    className="h-full w-full object-contain rounded-t-lg" 
-                                    src={`https://www.stonemarket.am/_next/image?url=${encodeURIComponent(item.img)}&w=1920&q=75`} 
-                                    alt={item.name} 
-                                />
-                            </Link>
-                                <img 
-                                    className={`h-[38px] w-[38px] p-2 rounded-lg absolute bottom-2 right-4 cursor-pointer transition-all shadow-sm
-                                        ${isLiked ? 'bg-red-500' : 'bg-gray-100 hover:bg-gray-200'}`} 
+                                    className={`h-[38px] w-[38px] p-2 rounded-lg absolute bottom-2 right-4 cursor-pointer transition-all shadow-md z-10
+                                        ${isLiked ? 'bg-red-500 scale-110' : 'bg-white/80 hover:bg-white'}`} 
                                     src={isLiked ? "https://www.stonemarket.am/icons/like-white.svg" : "https://www.stonemarket.am/icons/like-black.svg"} 
                                     alt="like"
                                     onClick={(e) => {
-                                    e.stopPropagation();
-                                    onLike(item);
+                                        e.preventDefault();
+                                        onLike(item);
                                     }}
                                 />
-                                </div> 
+                            </div> 
 
                             <div className="p-4">
-                                <p className="font-semibold text-sm truncate">{item.name}</p>
-                                <p className="text-[12px] text-gray-500 h-[32px] overflow-hidden mt-1 leading-tight">
+                                <p className="font-bold text-gray-800 text-sm truncate">{item.name}</p>
+                                <p className="text-[11px] text-gray-500 h-[32px] overflow-hidden mt-1 leading-tight italic">
                                     {item.desc}
                                 </p>
                                 <div className="flex justify-between items-center mt-4">
-                                    <p className="font-bold text-[17px] text-gray-900">{item.price}</p>
-                                    <img 
-                                        className="border border-green-500 h-[34px] w-[34px] p-2 rounded-lg cursor-pointer hover:bg-green-50" 
-                                        src="https://www.stonemarket.am/icons/add-to-cart-black.svg" 
-                                        alt="cart" 
-                                    />
+                                    <p className="font-black text-[16px] text-indigo-900">{item.price}</p>
+                                    <div className="border border-green-500 h-[36px] w-[36px] p-2 rounded-lg cursor-pointer hover:bg-green-500 group/cart transition-colors">
+                                        <img 
+                                            className="w-full h-full transition-all group-hover/cart:brightness-0 group-hover/cart:invert" 
+                                            src="https://www.stonemarket.am/icons/add-to-cart-black.svg" 
+                                            alt="cart" 
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        
                     );
                 })}
             </div>

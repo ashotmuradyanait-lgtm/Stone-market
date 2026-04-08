@@ -17,25 +17,45 @@ import {
   deleteDoc,
   collectionGroup, 
   writeBatch,
-  serverTimestamp as firestoreTimestamp 
+  serverTimestamp as firestoreTimestamp,
+  DocumentData,
+  QuerySnapshot
 } from "firebase/firestore";
 import { db, rtdb } from "./config"; 
 
+// --- INTERFACES ---
+interface Message {
+  id?: string;
+  text: string;
+  userId: string;
+  email: string;
+  type: "text" | "audio" | "video";
+  read: boolean;
+  createdAt: any; // Firestore timestamp
+}
+
+interface SendMessagePayload {
+  text?: string;
+  userId: string;
+  email: string;
+  type?: "text" | "audio" | "video";
+}
+
 // 1. --- ՉԱՏԻ ID ՍՏԵՂԾՈՒՄ ---
-export const getChatId = (uid1, uid2) => {
+export const getChatId = (uid1: string | undefined, uid2: string | undefined): string | null => {
   if (!uid1 || !uid2) return null;
   return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`;
 };
 
 // 2. --- ՆԱՄԱԿՆԵՐԻ ՈՒՂԱՐԿՈՒՄ ԵՎ ԼՍՈՒՄ ---
-export const sendMessage = async (chatId, { text, userId, email, type = "text" }) => {
+export const sendMessage = async (chatId: string, { text, userId, email, type = "text" }: SendMessagePayload): Promise<void> => {
   if (!chatId || (!text && type === "text")) return;
   try {
     await addDoc(collection(db, "chats", chatId, "messages"), {
       text: text || "",
       userId,
       email,
-      type, // Ավելացրել ենք type (text, audio, video)
+      type,
       read: false,
       createdAt: firestoreTimestamp(), 
     });
@@ -44,34 +64,34 @@ export const sendMessage = async (chatId, { text, userId, email, type = "text" }
   }
 };
 
-export const listenMessages = (chatId, callback) => {
+export const listenMessages = (chatId: string, callback: (messages: Message[]) => void) => {
   if (!chatId) return;
   const q = query(
     collection(db, "chats", chatId, "messages"),
     orderBy("createdAt", "asc")
   );
-  return onSnapshot(q, (snapshot) => {
-    const msgs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return onSnapshot(q, (snapshot: QuerySnapshot<DocumentData>) => {
+    const msgs = snapshot.docs.map(doc => ({ 
+      id: doc.id, 
+      ...doc.data() 
+    } as Message));
     callback(msgs);
   });
 };
 
-// 3. --- ՉԿԱՐԴԱՑՎԱԾ ՆԱՄԱԿՆԵՐԻ ԼՍՈՒՄ (Օպտիմալացված) ---
-export const listenUnreadCount = (userId, callback) => {
+// 3. --- ՉԿԱՐԴԱՑՎԱԾ ՆԱՄԱԿՆԵՐԻ ԼՍՈՒՄ ---
+export const listenUnreadCount = (userId: string, callback: (count: number) => void) => {
   if (!userId) return;
   
-  // Լսում ենք բոլոր "messages" ենթահավաքածուները, որտեղ read-ը false է
   const q = query(
     collectionGroup(db, "messages"), 
     where("read", "==", false)
   );
 
-  return onSnapshot(q, (snapshot) => {
-    // Ֆիլտրում ենք այն նամակները, որոնք իմը չեն ԵՎ պատկանում են իմ չատերին
+  return onSnapshot(q, (snapshot: QuerySnapshot<DocumentData>) => {
     const unreadCount = snapshot.docs.filter(docSnap => {
-      const data = docSnap.data();
+      const data = docSnap.data() as Message;
       const path = docSnap.ref.path;
-      // Ստուգում ենք, որ նամակը ուրիշինն է և chatId-ի մեջ կա իմ ID-ն
       return data.userId !== userId && path.includes(userId);
     }).length;
     
@@ -79,18 +99,20 @@ export const listenUnreadCount = (userId, callback) => {
   });
 };
 
-// 4. --- ՆԱՄԱԿՆԵՐԸ ԿԱՐԴԱՑՎԱԾ ՆՇԵԼ (Օգտագործելով Batch) ---
-export const markAsRead = async (chatId, messages, userId) => {
+// 4. --- ՆԱՄԱԿՆԵՐԸ ԿԱՐԴԱՑՎԱԾ ՆՇԵԼ ---
+export const markAsRead = async (chatId: string, messages: Message[], userId: string): Promise<void> => {
   if (!chatId || !messages.length) return;
   
   const unreadMessages = messages.filter(msg => msg.userId !== userId && !msg.read);
   if (unreadMessages.length === 0) return;
 
-  const batch = writeBatch(db); // Batch-ը ավելի արագ է, քան Promise.all-ը սովորական update-ի համար
+  const batch = writeBatch(db);
   
   unreadMessages.forEach(msg => {
-    const msgRef = doc(db, "chats", chatId, "messages", msg.id);
-    batch.update(msgRef, { read: true });
+    if (msg.id) {
+      const msgRef = doc(db, "chats", chatId, "messages", msg.id);
+      batch.update(msgRef, { read: true });
+    }
   });
 
   try {
@@ -101,7 +123,7 @@ export const markAsRead = async (chatId, messages, userId) => {
 };
 
 // 5. --- ԶԱՆԳԵՐԻ ԿԱՐԳԱՎՈՐՈՒՄ ---
-export const updateCallStatus = async (callId, status) => {
+export const updateCallStatus = async (callId: string, status: string): Promise<void> => {
   if (!callId) return;
   try {
     await updateDoc(doc(db, "calls", callId), { status });
@@ -111,7 +133,7 @@ export const updateCallStatus = async (callId, status) => {
 };
 
 // 6. --- ONLINE/OFFLINE ՍՏԱՏՈՒՍ ---
-export const updateUserStatus = (uid, email) => {
+export const updateUserStatus = (uid: string, email: string): void => {
   if (!uid) return;
   const statusRef = ref(rtdb, `status/${uid}`);
   const connectedRef = ref(rtdb, ".info/connected");
@@ -119,7 +141,6 @@ export const updateUserStatus = (uid, email) => {
   onValue(connectedRef, (snapshot) => {
     if (snapshot.val() === false) return;
 
-    // Երբ օգտատերը անջատվում է
     onDisconnect(statusRef).set({
       state: "offline",
       last_changed: rtdbTimestamp(),
@@ -127,7 +148,6 @@ export const updateUserStatus = (uid, email) => {
       id: uid
     });
 
-    // Երբ օգտատերը միանում է
     set(statusRef, {
       state: "online",
       last_changed: rtdbTimestamp(),

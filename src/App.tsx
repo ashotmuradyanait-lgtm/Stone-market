@@ -1,38 +1,46 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { User } from "firebase/auth"; // Firebase-ի ներդրված տիպը
 
+// Components
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Chat from "./components/Chat";
+import Login from "./components/Login";
+import VideoCall from "./components/VideoCall";
+import Stories from "./components/Stories";
 
-import Header from "./components/Header.jsx";
-import Footer from "./components/Footer.jsx";
-
-
-import Chat from "./components/Chat.jsx";
-import Login from "./components/Login.jsx";
-import VideoCall from "./components/VideoCall.jsx";
-import Stories from "./components/Stories.jsx"; // <--- Ավելացրինք Stories-ը
-
-
-import UserProfile from "./pages/UserProfile.jsx"; 
-import Home from "./pages/Home.jsx";
-import Design from "./pages/Design.jsx";
-import Dizayner from "./pages/Dizayner.jsx";
-import Kap from "./pages/Kap.jsx";
-import Like from "./pages/Like.jsx";
-import Mermasin from "./pages/Mermasin.jsx";
-import Xanut from "./pages/Xanut.jsx";
-import Project from "./designs/Project.jsx";
+// Pages
+import UserProfile from "./pages/UserProfile"; 
+import Home from "./pages/Home";
+import Design from "./pages/Design";
+import Dizayner from "./pages/Dizayner";
+import Kap from "./pages/Kap";
+import Like from "./pages/Like";
+import Mermasin from "./pages/Mermasin";
+import Xanut from "./pages/Xanut";
+import Project from "./designs/Project";
 
 // Firebase & Presence
 import { observeAuth } from "./firebase/auth";
 import { setupPresence } from "./firebase/presence";
 
+// App.tsx
+export interface Product {
+  name: string;
+  price: string; // Հեռացրու | number-ը, թող միայն string
+  img: string;
+  desc: string;
+}
+
 function App() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [wishlist, setWishlist] = useState([]);
+  // 2. Տիպավորում ենք state-երը
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [wishlist, setWishlist] = useState<Product[]>([]);
 
   // Wishlist Logic
-  const handleLike = (product) => {
+  const handleLike = (product: Product): void => {
     setWishlist((prev) => {
       const exists = prev.find((p) => p.name === product.name);
       return exists
@@ -43,7 +51,7 @@ function App() {
 
   // Auth Observer
   useEffect(() => {
-    const unsub = observeAuth((u) => {
+    const unsub = observeAuth((u: User | null) => {
       setUser(u);
       setLoading(false);
 
@@ -57,7 +65,7 @@ function App() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen font-bold text-indigo-600">
+      <div className="flex justify-center items-center h-screen font-bold text-indigo-600 animate-pulse text-xl">
         Բեռնվում է...
       </div>
     );
@@ -68,7 +76,6 @@ function App() {
       {/* Header-ին փոխանցում ենք wishlist-ի քանակը */}
       <Header wishlistCount={wishlist.length} />
 
-      {/* Stories-ը տեղադրում ենք այստեղ, որպեսզի այն միշտ լինի վերևում */}
       <Stories />
 
       <Routes>
@@ -78,8 +85,8 @@ function App() {
         <Route path="/dizayner" element={<Dizayner />} />
         <Route path="/kap" element={<Kap />} />
         <Route path="/mermasin" element={<Mermasin />} />
-        <Route path="/xanut" element={<Xanut onLike={handleLike} />} />
-        <Route path="/like" element={<Like wishlist={wishlist} />} />
+        <Route path="/xanut" element={<Xanut onLike={handleLike} wishlist={wishlist} />} />
+        <Route path="/like" element={<Like wishlist={wishlist} onLike={handleLike} />} />
         <Route path="/project/:id" element={<Project />} />
 
         {/* --- ՊԱՇՏՊԱՆՎԱԾ ԷՋԵՐ --- */}
@@ -106,6 +113,7 @@ function App() {
           element={!user ? <Login /> : <Navigate to="/chat" />}
         />
 
+        {/* --- 404 / REDIRECT --- */}
         <Route
           path="*"
           element={<Navigate to={user ? "/chat" : "/login"} />}
