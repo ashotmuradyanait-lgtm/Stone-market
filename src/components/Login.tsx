@@ -1,34 +1,63 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { login, register } from "../firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import { Camera, Mail, Lock, UserPlus, LogIn } from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
 
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Նկարի ընտրության ֆունկցիա
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+      setPreview(URL.createObjectURL(selectedFile));
+    }
+  };
 
   const handleLogin = async () => {
+    if (!email || !password) return setError("Please fill in all fields");
     try {
       setLoading(true);
       setError("");
       await login(email, password);
       navigate("/chat");
     } catch (err: any) {
-      // Firebase-ի սխալները սովորաբար ունենում են message դաշտ
-      setError(err.message || "Login failed");
+      setError("Invalid email or password");
     } finally {
       setLoading(false);
     }
   };
 
   const handleRegister = async () => {
+    if (!email || !password) return setError("Please fill in all fields");
     try {
       setLoading(true);
       setError("");
-     await register(email, password, ""); // Ավելացրինք "" որպես displayName
+
+      // 1. Ստեղծում ենք օգտատիրոջը
+      const userCredential = await register(email, password, "");
+      const user = userCredential.user;
+
+      let photoURL = "";
+      // 2. Եթե նկար ընտրված է, վերբեռնում ենք Storage
+      if (file) {
+        const storage = getStorage();
+        const avatarRef = sRef(storage, `avatars/${user.uid}`);
+        await uploadBytes(avatarRef, file);
+        photoURL = await getDownloadURL(avatarRef);
+      }
+
+      // 3. Ուղարկում ենք դեպի չատ
       navigate("/chat");
     } catch (err: any) {
       setError(err.message || "Registration failed");
@@ -38,106 +67,99 @@ export default function Login() {
   };
 
   return (
-    <div style={styles.wrapper}>
-      <div style={styles.card}>
-        <h2 style={styles.title}>🔐 Welcome</h2>
-        <p style={styles.subtitle}>Login or create an account</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-4 font-sans">
+      <div className="w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl p-8 md:p-10 transform transition-all">
+        
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-2xl mb-4 text-indigo-600">
+            <Lock size={32} />
+          </div>
+          <h2 className="text-3xl font-black text-gray-800">Welcome Back</h2>
+          <p className="text-gray-500 text-sm mt-2">Join our secure community</p>
+        </div>
 
-        <input
-          style={styles.input}
-          placeholder="Email"
-          type="email"
-          value={email}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-        />
+        {/* Avatar Upload (Only for registration or profile feel) */}
+        <div className="flex flex-col items-center mb-6">
+          <div 
+            onClick={() => fileInputRef.current?.click()}
+            className="relative w-24 h-24 rounded-[2rem] bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-indigo-400 transition-all overflow-hidden"
+          >
+            {preview ? (
+              <img src={preview} alt="Preview" className="w-full h-full object-cover" />
+            ) : (
+              <div className="text-gray-400 flex flex-col items-center">
+                <Camera size={24} />
+                <span className="text-[10px] mt-1 font-bold">AVATAR</span>
+              </div>
+            )}
+          </div>
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            onChange={handleFileChange} 
+            className="hidden" 
+            accept="image/*" 
+          />
+        </div>
 
-        <input
-          style={styles.input}
-          placeholder="Password"
-          type="password"
-          value={password}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-        />
+        {/* Inputs */}
+        <div className="space-y-4">
+          <div className="relative">
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <input
+              className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-indigo-200 outline-none transition-all text-sm"
+              placeholder="Email Address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
 
-        {error && <p style={styles.error}>{error}</p>}
+          <div className="relative">
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <input
+              className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-indigo-200 outline-none transition-all text-sm"
+              placeholder="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+        </div>
 
-        <button 
-          style={styles.loginBtn} 
-          onClick={handleLogin} 
-          disabled={loading}
-        >
-          {loading ? "Loading..." : "Login"}
-        </button>
+        {/* Error Message */}
+        {error && (
+          <div className="mt-4 p-3 bg-red-50 rounded-xl text-red-500 text-xs font-bold text-center animate-shake">
+            {error}
+          </div>
+        )}
 
-        <button 
-          style={styles.registerBtn} 
-          onClick={handleRegister} 
-          disabled={loading}
-        >
-          {loading ? "Loading..." : "Register"}
-        </button>
+        {/* Buttons */}
+        <div className="mt-8 space-y-3">
+          <button 
+            onClick={handleLogin}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-2 py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all disabled:opacity-50"
+          >
+            <LogIn size={20} />
+            {loading ? "Processing..." : "Sign In"}
+          </button>
+
+          <button 
+            onClick={handleRegister}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-2 py-4 bg-white text-gray-700 border-2 border-gray-100 rounded-2xl font-bold hover:bg-gray-50 active:scale-95 transition-all disabled:opacity-50"
+          >
+            <UserPlus size={20} />
+            {loading ? "Processing..." : "Create Account"}
+          </button>
+        </div>
+
+        <p className="text-center text-gray-400 text-[11px] mt-6">
+          By continuing, you agree to our Terms and Service.
+        </p>
       </div>
     </div>
   );
 }
-
-// Սահմանում ենք ստայլերի տիպը, որպեսզի TypeScript-ը հասկանա CSS հատկությունները
-const styles: { [key: string]: React.CSSProperties } = {
-  wrapper: {
-    height: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "linear-gradient(135deg, #667eea, #764ba2)",
-    fontFamily: "sans-serif",
-  },
-  card: {
-    width: "320px",
-    padding: "30px",
-    borderRadius: "16px",
-    background: "white",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-    textAlign: "center" as const, // TS-ի համար պետք է հստակեցնել
-  },
-  title: {
-    marginBottom: "5px",
-  },
-  subtitle: {
-    fontSize: "12px",
-    color: "#666",
-    marginBottom: "20px",
-  },
-  input: {
-    width: "100%",
-    padding: "10px",
-    marginBottom: "10px",
-    borderRadius: "8px",
-    border: "1px solid #ddd",
-    outline: "none",
-    boxSizing: "border-box", // Որպեսզի padding-ը չմեծացնի input-ը
-  },
-  loginBtn: {
-    width: "100%",
-    padding: "10px",
-    background: "#4f46e5",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-    marginBottom: "10px",
-  },
-  registerBtn: {
-    width: "100%",
-    padding: "10px",
-    background: "#22c55e",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-  },
-  error: {
-    color: "red",
-    fontSize: "12px",
-    marginBottom: "10px",
-  },
-};

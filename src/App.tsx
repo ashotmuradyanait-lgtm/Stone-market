@@ -73,8 +73,10 @@ function App() {
 
   return (
     <>
-      {/* Header-ին փոխանցում ենք wishlist-ի քանակը */}
-      <Header wishlistCount={wishlist.length} />
+<Header 
+  wishlistCount={wishlist.length} 
+  currentUserUid={user?.uid} 
+/>
 
       <Stories />
 
