@@ -1,42 +1,48 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useCallback, useMemo } from 'react';
 
-// 1. Սահմանում ենք, թե ինչ տվյալներ է պարունակելու Context-ը
+// 1. Սահմանում ենք տիպերը
 interface ChatContextType {
   unreadCount: number;
-  setUnreadCount: React.Dispatch<React.SetStateAction<number>>; // Ավելացրեցի նաև սա, եթե պետք գա
+  setUnreadCount: React.Dispatch<React.SetStateAction<number>>;
   incrementUnread: () => void;
   resetUnread: () => void;
 }
 
-// 2. Ստեղծում ենք Context-ը (սկզբնական արժեքը null է, բայց նշում ենք տիպը)
+// 2. Ստեղծում ենք Context-ը (սկզբնական արժեքը null, բայց տիպը նշված է)
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
-// 3. Provider-ի համար սահմանում ենք children-ի տիպը
-interface ChatProviderProps {
-  children: ReactNode;
-}
-
-export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
+// 3. Provider-ը
+export const ChatProvider = ({ children }: { children: ReactNode }) => {
   const [unreadCount, setUnreadCount] = useState<number>(0);
 
-  const incrementUnread = () => setUnreadCount(prev => prev + 1);
-  const resetUnread = () => setUnreadCount(0);
+  const incrementUnread = useCallback(() => {
+    setUnreadCount((prev) => prev + 1);
+  }, []);
+
+  const resetUnread = useCallback(() => {
+    setUnreadCount(0);
+  }, []);
+
+  // Այստեղ օգտագործում ենք "as ChatContextType", որ TS-ը չբողոքի
+  const value = useMemo(() => ({
+    unreadCount,
+    setUnreadCount,
+    incrementUnread,
+    resetUnread
+  }), [unreadCount, incrementUnread, resetUnread]) as ChatContextType;
 
   return (
-    <ChatContext.Provider value={{ unreadCount, setUnreadCount, incrementUnread, resetUnread }}>
+    <ChatContext.Provider value={value}>
       {children}
     </ChatContext.Provider>
   );
 };
 
-// 4. Custom Hook՝ սխալներից խուսափելու համար
+// 4. Custom Hook
 export const useChat = (): ChatContextType => {
   const context = useContext(ChatContext);
-  
-  // Եթե useChat-ը օգտագործվի ChatProvider-ից դուրս, TS-ը մեզ կզգուշացնի
   if (!context) {
     throw new Error("useChat must be used within a ChatProvider");
   }
-  
   return context;
 };
