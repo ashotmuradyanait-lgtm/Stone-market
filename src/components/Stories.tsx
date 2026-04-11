@@ -1,72 +1,92 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { db, auth } from '../firebase/config';
-import { collection, query, onSnapshot, serverTimestamp, addDoc } from 'firebase/firestore';
+import { 
+  collection, query, onSnapshot, serverTimestamp, 
+  addDoc, orderBy, doc, updateDoc, arrayUnion, arrayRemove 
+} from 'firebase/firestore';
 
-// 1. Սահմանում ենք Story-ի ինտերֆեյսը
+// TypeScript Interface-ներ
+interface IComment {
+  id: string;
+  text: string;
+  userEmail: string;
+  createdAt: any;
+}
+
 interface IStory {
   id: string;
   contentUrl: string;
   type: "video" | "image";
   userEmail: string;
-  createdAt: any; // Firestore Timestamp
+  createdAt: any;
+  likes?: string[];
 }
 
 export default function Stories() {
   const [stories, setStories] = useState<IStory[]>([]);
   const [selectedStory, setSelectedStory] = useState<IStory | null>(null);
+  const [comments, setComments] = useState<IComment[]>([]);
+  const [newComment, setNewComment] = useState<string>("");
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [recordingTime, setRecordingTime] = useState<number>(0);
   
+  // Ref-երը TypeScript-ի համար
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
-  
-  // Ուղղում 1: Տիպավորում ենք timer-ը այնպես, որ Browser-ի և Node-ի միջև կոնֆլիկտ չլինի
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  // 1. Stories Snapshot (24 ժամվա ֆիլտրով)
   useEffect(() => {
-    const q = query(collection(db, "stories"));
-
+    const q = query(collection(db, "stories"), orderBy("createdAt", "desc"));
+    
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const twentyFourHoursAgo = Date.now() - 24 * 60 * 60 * 1000;
-      
-      const docs = snapshot.docs
-        .map(doc => ({ id: doc.id, ...doc.data() } as IStory))
-        .filter(story => {
-            // Ստուգում ենք, որ createdAt-ը գոյություն ունի և 24 ժամվա մեջ է
-            const time = story.createdAt?.toMillis ? story.createdAt.toMillis() : 0;
-            return time > twentyFourHoursAgo;
-        })
-        .sort((a, b) => {
-            const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
-            const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
-            return timeB - timeA;
-        });
+      const now = Date.now();
+      const dayInMs = 24 * 60 * 60 * 1000;
+
+      const docs = snapshot.docs.map(doc => ({ 
+        id: doc.id, 
+        ...doc.data() 
+      } as IStory)).filter(story => {
+        if (!story.createdAt) return true; // Նոր գցած story-ն միանգամից երևա
+        return (now - story.createdAt.toMillis()) < dayInMs;
+      });
 
       setStories(docs);
     });
 
-    return () => {
-      unsubscribe();
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
+    return () => unsubscribe();
   }, []);
 
+  // 2. Comments Snapshot
+  useEffect(() => {
+    if (!selectedStory) { setComments([]); return; }
+    const q = query(collection(db, "stories", selectedStory.id, "comments"), orderBy("createdAt", "asc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setComments(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as IComment)));
+    });
+    return () => unsubscribe();
+  }, [selectedStory]);
+
+  // --- Վիդեո նկարել ---
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: "user", width: { ideal: 480 }, height: { ideal: 854 } }, 
+        video: { facingMode: "user" }, 
         audio: true 
       });
-      
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
       
       setIsRecording(true);
       setRecordingTime(0);
 
-      // Ուղղում 2: Օգտագործում ենք window.setInterval կամ ուղղակի տիպավորված Ref-ը
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          videoRef.current.play();
+        }
+      }, 200);
+
       timerRef.current = setInterval(() => {
         setRecordingTime(prev => prev + 1);
       }, 1000);
@@ -83,121 +103,133 @@ export default function Stories() {
         const reader = new FileReader();
         reader.readAsDataURL(blob);
         reader.onloadend = async () => {
-          try {
-            await addDoc(collection(db, "stories"), {
-              contentUrl: reader.result as string,
-              type: "video",
-              userEmail: auth.currentUser?.email || "Անանուն",
-              createdAt: serverTimestamp()
-            });
-          } catch (err) {
-            console.error("Firestore Upload Error:", err);
-          }
-          
-          stream.getTracks().forEach(track => track.stop());
-          setIsRecording(false);
+          await addDoc(collection(db, "stories"), {
+            contentUrl: reader.result as string,
+            type: "video",
+            userEmail: auth.currentUser?.email || "Անանուն",
+            createdAt: serverTimestamp(),
+            likes: []
+          });
         };
+        stream.getTracks().forEach(track => track.stop());
       };
 
       mediaRecorderRef.current.start();
     } catch (err) {
-      console.error("Camera access error:", err);
-      alert("Խնդրում ենք թույլատրել տեսախցիկի օգտագործումը");
+      console.error(err);
+      alert("Կամերան չմիացավ");
     }
   };
 
   const stopRecording = () => {
-    if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-    }
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
-      mediaRecorderRef.current.stop();
-    }
+    setIsRecording(false);
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (mediaRecorderRef.current) mediaRecorderRef.current.stop();
+  };
+
+  // --- Ֆայլ գցել (Նկար/Վիդեո) ---
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = async () => {
+      await addDoc(collection(db, "stories"), {
+        contentUrl: reader.result as string,
+        type: file.type.startsWith('image/') ? "image" : "video",
+        userEmail: auth.currentUser?.email || "Անանուն",
+        createdAt: serverTimestamp(),
+        likes: []
+      });
+    };
+  };
+
+  // --- Like & Comment ---
+  const handleLike = async (e: React.MouseEvent, story: IStory) => {
+    e.stopPropagation();
+    if (!auth.currentUser) return;
+    const storyRef = doc(db, "stories", story.id);
+    const isLiked = story.likes?.includes(auth.currentUser.uid);
+    await updateDoc(storyRef, {
+      likes: isLiked ? arrayRemove(auth.currentUser.uid) : arrayUnion(auth.currentUser.uid)
+    });
+  };
+
+  const handleAddComment = async () => {
+    if (!newComment.trim() || !selectedStory || !auth.currentUser) return;
+    await addDoc(collection(db, "stories", selectedStory.id, "comments"), {
+      text: newComment,
+      userEmail: auth.currentUser.email,
+      createdAt: serverTimestamp()
+    });
+    setNewComment("");
   };
 
   return (
-    <div className="relative">
-      <div className="flex p-4 overflow-x-auto gap-4 bg-white no-scrollbar items-center border-b shadow-sm">
+    <div className="relative font-sans select-none">
+      {/* Stories Bar */}
+      <div className="flex p-4 overflow-x-auto gap-4 bg-white items-center border-b no-scrollbar">
+        <input type="file" hidden ref={fileInputRef} accept="image/*,video/*" onChange={handleFileUpload} />
         
-        {/* Record Button */}
-        <div className="flex-shrink-0 flex flex-col items-center gap-1">
-          <button 
-            onClick={isRecording ? stopRecording : startRecording}
-            className={`w-16 h-16 rounded-full flex items-center justify-center transition-all border-2 ${
-              isRecording ? 'border-red-500 bg-white' : 'border-blue-500 bg-blue-600 text-white'
-            }`}
-          >
-            {isRecording ? <div className="w-6 h-6 bg-red-600 rounded-sm animate-pulse" /> : <span className="text-3xl">+</span>}
-          </button>
-          <span className="text-[10px] font-bold text-gray-600 uppercase tracking-tighter">
-            {isRecording ? `${recordingTime}վ` : "Նկարել"}
-          </span>
+        <div className="flex flex-col items-center gap-1">
+          <button onClick={() => fileInputRef.current?.click()} className="w-16 h-16 rounded-full bg-blue-600 text-white text-3xl shadow-md active:scale-90 transition-transform">+</button>
+          <span className="text-[10px] text-gray-500 font-bold">ՖԱՅԼ</span>
         </div>
 
-        {/* Stories List */}
+        <div className="flex flex-col items-center gap-1">
+          <button onClick={startRecording} className="w-16 h-16 rounded-full bg-gray-100 border-2 border-red-500 text-2xl flex items-center justify-center active:scale-90 transition-transform">🎥</button>
+          <span className="text-[10px] text-gray-500 font-bold">ՆԿԱՐԵԼ</span>
+        </div>
+
         {stories.map((story) => (
-          <div 
-            key={story.id} 
-            className="flex-shrink-0 flex flex-col items-center gap-1 cursor-pointer"
-            onClick={() => setSelectedStory(story)}
-          >
-            <div className="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600">
-               <div className="w-full h-full rounded-full border-2 border-white overflow-hidden bg-gray-200 shadow-inner">
-                  <video src={story.contentUrl} className="w-full h-full object-cover" />
+          <div key={story.id} className="flex-shrink-0 flex flex-col items-center gap-1 cursor-pointer active:opacity-70" onClick={() => setSelectedStory(story)}>
+            <div className="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-yellow-400 to-purple-600">
+               <div className="w-full h-full rounded-full border-2 border-white overflow-hidden bg-gray-200">
+                  {story.type === 'image' ? <img src={story.contentUrl} className="w-full h-full object-cover" alt="" /> : <video src={story.contentUrl} className="w-full h-full object-cover" />}
                </div>
             </div>
-            <span className="text-[10px] font-medium text-gray-500 truncate w-16 text-center">
-              {story.userEmail ? story.userEmail.split('@')[0] : 'User'}
-            </span>
+            <span className="text-[10px] text-gray-500 truncate w-16 text-center">{story.userEmail?.split('@')[0]}</span>
           </div>
         ))}
       </div>
 
-      {/* Recording Screen */}
+      {/* Recording Overlay */}
       {isRecording && (
-        <div className="fixed inset-0 z-[6000] bg-black flex flex-col items-center justify-center">
-            <video 
-              ref={videoRef} 
-              autoPlay 
-              muted 
-              playsInline 
-              className="w-full h-full object-cover" 
-            />
-            <div className="absolute top-10 flex flex-col items-center gap-2">
-               <div className="bg-red-600 px-6 py-2 rounded-full text-white font-black text-lg animate-pulse shadow-xl">
-                  {recordingTime} վայրկյան
-               </div>
-            </div>
-            <button 
-              onClick={stopRecording}
-              className="absolute bottom-12 w-20 h-20 bg-white rounded-full border-8 border-gray-400 flex items-center justify-center active:scale-90 transition-transform"
-            >
-               <div className="w-10 h-10 bg-red-600 rounded-lg shadow-lg" />
+        <div className="fixed inset-0 z-[8000] bg-black flex items-center justify-center">
+            <video ref={videoRef} autoPlay muted playsInline className="w-full h-full object-cover scale-x-[-1]" />
+            <div className="absolute top-10 bg-red-600 px-4 py-1 rounded-full text-white font-bold animate-pulse">{recordingTime}վ</div>
+            <button onClick={stopRecording} className="absolute bottom-10 w-20 h-20 rounded-full border-4 border-white bg-red-600 shadow-2xl flex items-center justify-center">
+              <div className="w-8 h-8 bg-white rounded-sm" />
             </button>
         </div>
       )}
 
-      {/* Full Screen Viewer */}
+      {/* Story Viewer */}
       {selectedStory && (
-        <div className="fixed inset-0 z-[7000] bg-black flex items-center justify-center" onClick={() => setSelectedStory(null)}>
-           <div className="absolute top-6 left-6 flex items-center gap-3 z-[7001]">
-              <div className="w-10 h-10 rounded-full bg-blue-500 border-2 border-white flex items-center justify-center text-white font-bold text-xs">
-                {selectedStory.userEmail ? selectedStory.userEmail[0].toUpperCase() : '?'}
-              </div>
-              <span className="text-white font-bold shadow-md">{selectedStory.userEmail?.split('@')[0]}</span>
-           </div>
-           
-           <button className="absolute top-6 right-6 text-white text-5xl font-thin">&times;</button>
-           
-           <div className="w-full max-w-lg h-screen md:h-[90vh] bg-black md:rounded-3xl overflow-hidden shadow-2xl border border-gray-800">
-             <video 
-               src={selectedStory.contentUrl} 
-               autoPlay 
-               playsInline
-               onEnded={() => setSelectedStory(null)} 
-               className="w-full h-full object-contain" 
-             />
+        <div className="fixed inset-0 z-[7000] bg-black flex flex-col" onClick={() => setSelectedStory(null)}>
+           <div className="relative flex-1 flex items-center justify-center">
+             <button className="absolute top-6 right-6 text-white text-3xl z-[7010]">&times;</button>
+             {selectedStory.type === 'image' ? <img src={selectedStory.contentUrl} className="max-h-full object-contain" alt="" /> : <video src={selectedStory.contentUrl} autoPlay className="max-h-full object-contain" />}
+             
+             <div className="absolute bottom-0 w-full p-6 bg-gradient-to-t from-black via-black/60 to-transparent" onClick={e => e.stopPropagation()}>
+                <div className="max-h-40 overflow-y-auto mb-4 space-y-2 no-scrollbar">
+                  {comments.map(c => (
+                    <div key={c.id} className="text-white text-sm"><span className="font-bold text-blue-400">{c.userEmail.split('@')[0]}:</span> {c.text}</div>
+                  ))}
+                </div>
+                <div className="flex items-center gap-3">
+                  <button onClick={(e) => handleLike(e, selectedStory)} className="text-2xl drop-shadow-lg active:scale-125 transition-transform">
+                    {selectedStory.likes?.includes(auth.currentUser?.uid || "") ? "❤️" : "🤍"}
+                  </button>
+                  <input 
+                    className="flex-1 bg-white/20 backdrop-blur-lg rounded-full px-4 py-2 text-white border border-white/20 outline-none focus:bg-white/30" 
+                    placeholder="Գրել մեկնաբանություն..." 
+                    value={newComment}
+                    onChange={e => setNewComment(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && handleAddComment()}
+                  />
+                </div>
+             </div>
            </div>
         </div>
       )}

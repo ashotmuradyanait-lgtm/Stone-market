@@ -14,6 +14,7 @@ import {
   onSnapshot, 
   updateDoc, 
   doc, 
+  setDoc,
   where,
   collectionGroup, 
   writeBatch,
@@ -46,14 +47,29 @@ export interface SendMessagePayload {
   videoUrl?: string;
 }
 
-// 1. --- GET UNIQUE CHAT ID ---
-// Սա երաշխավորում է, որ UID-ները միշտ նույն հերթականությամբ կդասավորվեն
+// 1. --- SYNC USER DATA TO FIRESTORE ---
+/**
+ * Այս ֆունկցիան պետք է կանչել Login կամ Register ժամանակ։
+ * Այն ստեղծում է "users" հավաքածու, որտեղից մենք կարդում ենք անունները և նկարները։
+ */
+export const updateUserData = async (uid: string, email: string, photoURL?: string) => {
+  if (!uid) return;
+  const userRef = doc(db, "users", uid);
+  await setDoc(userRef, {
+    uid,
+    email,
+    photoURL: photoURL || "",
+    lastSeen: firestoreTimestamp()
+  }, { merge: true });
+};
+
+// 2. --- GET UNIQUE CHAT ID ---
 export const getChatId = (uid1: string | undefined, uid2: string | undefined): string | null => {
   if (!uid1 || !uid2) return null;
   return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`;
 };
 
-// 2. --- SEND & LISTEN MESSAGES ---
+// 3. --- SEND & LISTEN MESSAGES ---
 export const sendMessage = async (
   chatId: string, 
   { text, userId, email, type = "text", audioUrl, videoUrl }: SendMessagePayload
@@ -93,7 +109,7 @@ export const listenMessages = (chatId: string, callback: (messages: Message[]) =
   });
 };
 
-// 3. --- UNREAD MESSAGES COUNT ---
+// 4. --- UNREAD MESSAGES COUNT ---
 export const listenUnreadCount = (userId: string, callback: (count: number) => void) => {
   if (!userId) return;
   
@@ -103,11 +119,9 @@ export const listenUnreadCount = (userId: string, callback: (count: number) => v
   );
 
   return onSnapshot(q, (snapshot: QuerySnapshot<DocumentData>) => {
-    // Ֆիլտրում ենք այն նամակները, որոնք մերը չեն (ուրիշն է գրել)
-    // և որոնք գտնվում են այն չատի մեջ, որտեղ մեր UID-ն կա
     const unreadCount = snapshot.docs.filter(docSnap => {
       const data = docSnap.data() as Message;
-      const path = docSnap.ref.path; // chats/uid1_uid2/messages/msgId
+      const path = docSnap.ref.path;
       return data.userId !== userId && path.includes(userId);
     }).length;
     
@@ -115,11 +129,10 @@ export const listenUnreadCount = (userId: string, callback: (count: number) => v
   });
 };
 
-// 4. --- MARK MESSAGES AS READ ---
+// 5. --- MARK MESSAGES AS READ ---
 export const markAsRead = async (chatId: string, messages: Message[], userId: string): Promise<void> => {
   if (!chatId || !messages.length) return;
   
-  // Գտնում ենք այն նամակները, որոնք մենք չենք գրել ու դեռ չենք կարդացել
   const unreadMessages = messages.filter(msg => msg.userId !== userId && !msg.read);
   if (unreadMessages.length === 0) return;
 
@@ -139,18 +152,8 @@ export const markAsRead = async (chatId: string, messages: Message[], userId: st
   }
 };
 
-// 5. --- CALLS ---
-export const updateCallStatus = async (callId: string, status: "pending" | "accepted" | "rejected"): Promise<void> => {
-  if (!callId) return;
-  try {
-    await updateDoc(doc(db, "calls", callId), { status });
-  } catch (e) {
-    console.error("UpdateCallStatus Error:", e);
-  }
-};
-
 // 6. --- REAL-TIME STATUS (ONLINE/OFFLINE) ---
-export const updateUserStatus = (uid: string, email: string): void => {
+export const updateUserStatus = (uid: string, email: string, photoURL?: string): void => {
   if (!uid) return;
   
   const statusRef = ref(rtdb, `status/${uid}`);
@@ -159,18 +162,15 @@ export const updateUserStatus = (uid: string, email: string): void => {
   onValue(connectedRef, (snapshot: DataSnapshot) => {
     if (snapshot.val() === false) return;
 
-    onDisconnect(statusRef).set({
-      state: "offline",
-      last_changed: rtdbTimestamp(),
-      email,
-      id: uid
-    });
-
-    set(statusRef, {
+    const data = {
       state: "online",
       last_changed: rtdbTimestamp(),
       email,
-      id: uid
-    });
+      id: uid,
+      photoURL: photoURL || ""
+    };
+
+    onDisconnect(statusRef).set({ ...data, state: "offline" });
+    set(statusRef, data);
   });
 };
